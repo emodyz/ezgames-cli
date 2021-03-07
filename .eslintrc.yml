@@ -1,0 +1,14 @@
+extends:
+    - oclif
+    #- oclif-typescript
+rules: {
+  'import/no-extraneous-dependencies': 'off',
+  'import/extensions': 'off',
+  'no-console': 'off',
+  'max-len': 'off',
+  'camelcase': 'off',
+  'class-methods-use-this': 'off',
+  'prefer-destructuring': 'off',
+  'semi': [ 'error', 'never' ],
+  '@typescript-eslint/ban-ts-ignore': 'off'
+}
