@@ -1,6 +1,6 @@
 extends:
     - oclif
-    #- oclif-typescript
+    - oclif-typescript
 rules: {
   'import/no-extraneous-dependencies': 'off',
   'import/extensions': 'off',
