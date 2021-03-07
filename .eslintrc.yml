@@ -10,5 +10,6 @@ rules: {
   'class-methods-use-this': 'off',
   'prefer-destructuring': 'off',
   'semi': [ 'error', 'never' ],
-  '@typescript-eslint/ban-ts-ignore': 'off'
+  '@typescript-eslint/ban-ts-ignore': 'off',
+  'no-warning-comments': off
 }

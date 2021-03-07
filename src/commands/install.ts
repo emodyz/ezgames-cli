@@ -16,7 +16,8 @@ export default class Install extends Command {
 
   async run() {
     const {flags} = this.parse(Install)
-    let requestedRelease = flags.release
+    const releaseFlag = flags.release
+    let requestedRelease: any
     /*
     if (!stage) {
       stage = await this.chooseVersion()
@@ -64,14 +65,19 @@ export default class Install extends Command {
             task.newListr([
               {
                 title: 'Choose a Version',
-                enabled: (): boolean => !requestedRelease,
+                enabled: (): boolean => !releaseFlag,
                 task: async (ctx, task): Promise<void> => {
-                  requestedRelease = await task.prompt<string>({type: 'Select', choices: await Install.getVersions(), message: 'Choose the version of EZGames you wish to install: '})
+                  // TODO: use the enquirer package instead of the one integrated in listr2
+                  // @ts-ignore
+                  requestedRelease = await task.prompt<string>({type: 'Select', choices: await Install.getVersions(), message: 'Choose the version of EZGames you wish to install: ', result() {
+                    // @ts-ignore
+                    return this.focused.value
+                  }})
                 },
               },
               {
                 title: 'Setting up EZGames (2.0.0-beta.3)...',
-                enabled: (): boolean => Boolean(requestedRelease),
+                enabled: (): boolean => Boolean(releaseFlag),
                 task: async (): Promise<void> => {
                   await cli.wait(3000)
                 },
@@ -92,6 +98,7 @@ export default class Install extends Command {
 
     try {
       await tasks.run()
+      console.log(requestedRelease)
     } catch (error) {
       // it will collect all the errors encountered if { exitOnError: false } is set as an option but will not throw them
       // elsewise it will throw the first error encountered as expected
@@ -104,7 +111,7 @@ export default class Install extends Command {
 
   } */
 
-  static async getVersions(): Promise<Array<string>> {
+  static async getVersions(): Promise<Array<Record<string, string | null>>> {
     const latestRelease = (await gitHubRequest('GET /repos/{owner}/{repo}/releases/latest', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',
@@ -117,6 +124,29 @@ export default class Install extends Command {
 
     const latestPreRelease = allReleases.filter((item: any) => item.prerelease).first()
 
-    return ['Development', `Pre-release (${latestPreRelease.tag_name})`, `Stable (${latestRelease.tag_name})`, 'Show all versions']
+    return [
+      {
+        name: 'dev',
+        message: 'Development',
+        value: 'dev',
+      },
+      {
+        name: 'preRelease',
+        message: `Pre-release (${latestPreRelease.tag_name})`,
+        value: latestPreRelease.tag_name,
+      },
+      {
+        name: 'stable',
+        message: `Stable (${latestRelease.tag_name})`,
+        value: latestPreRelease.tag_name,
+      },
+      {
+        name: 'showAll',
+        message: 'Show all versions',
+        value: null,
+      },
+    ]
+
+    // return ['Development', `Pre-release (${latestPreRelease.tag_name})`, `Stable (${latestRelease.tag_name})`, 'Show all versions']
   }
 }
