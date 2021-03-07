@@ -1,4 +1,4 @@
-import {Command, flags} from '@oclif/command'
+import {Command, flags as flgs} from '@oclif/command'
 import {where} from '../node-sys'
 import {Listr, ListrContext as Ctx} from 'listr2'
 import {request as gitHubRequest} from '@octokit/request'
@@ -10,19 +10,18 @@ export default class Install extends Command {
   static description = 'describe the command here'
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    release: flags.string(/* {options: Install.getVersions()} */),
+    help: flgs.help({char: 'h'}),
+    release: flgs.string(),
   }
 
   async run() {
-    const {flags} = this.parse(Install)
-    const releaseFlag = flags.release
-    let requestedRelease: any
-    /*
-    if (!stage) {
-      stage = await this.chooseVersion()
+    Install.flags = {
+      help: flgs.help({char: 'h'}),
+      release: flgs.string({options: (await Install.getVersions()).availableVersions}),
     }
-    this.log(`the stage is: ${stage}`) */
+
+    const {flags} = this.parse(Install)
+    let requestedRelease = flags.release
 
     const tasks = new Listr<Ctx>(
       [
@@ -65,19 +64,25 @@ export default class Install extends Command {
             task.newListr([
               {
                 title: 'Choose a Version',
-                enabled: (): boolean => !releaseFlag,
+                enabled: (): boolean => !requestedRelease,
                 task: async (ctx, task): Promise<void> => {
-                  // TODO: use the enquirer package instead of the one integrated in listr2
-                  // @ts-ignore
-                  requestedRelease = await task.prompt<string>({type: 'Select', choices: await Install.getVersions(), message: 'Choose the version of EZGames you wish to install: ', result() {
+                  // TODO: Waiting on this pr https://github.com/enquirer/enquirer/pull/307
+                  requestedRelease = await task.prompt<string>(
                     // @ts-ignore
-                    return this.focused.value
-                  }})
+                    {
+                      type: 'Select',
+                      choices: (await Install.getVersions()).choices,
+                      message: 'Choose the version of EZGames you wish to install: ',
+                      result() {
+                      // @ts-ignore
+                        return this.focused.value
+                      },
+                    })
                 },
               },
               {
                 title: 'Setting up EZGames (2.0.0-beta.3)...',
-                enabled: (): boolean => Boolean(releaseFlag),
+                enabled: (): boolean => Boolean(requestedRelease),
                 task: async (): Promise<void> => {
                   await cli.wait(3000)
                 },
@@ -111,7 +116,10 @@ export default class Install extends Command {
 
   } */
 
-  static async getVersions(): Promise<Array<Record<string, string | null>>> {
+  static async getVersions(): Promise<{
+    availableVersions: Array<string> | undefined;
+    choices: Array<Record<string, string | null>>;
+  }> {
     const latestRelease = (await gitHubRequest('GET /repos/{owner}/{repo}/releases/latest', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',
@@ -124,28 +132,31 @@ export default class Install extends Command {
 
     const latestPreRelease = allReleases.filter((item: any) => item.prerelease).first()
 
-    return [
-      {
-        name: 'dev',
-        message: 'Development',
-        value: 'dev',
-      },
-      {
-        name: 'preRelease',
-        message: `Pre-release (${latestPreRelease.tag_name})`,
-        value: latestPreRelease.tag_name,
-      },
-      {
-        name: 'stable',
-        message: `Stable (${latestRelease.tag_name})`,
-        value: latestPreRelease.tag_name,
-      },
-      {
-        name: 'showAll',
-        message: 'Show all versions',
-        value: null,
-      },
-    ]
+    return {
+      availableVersions: allReleases.map(item => item.tag_name).all(),
+      choices: [
+        {
+          name: 'dev',
+          message: 'Development',
+          value: 'dev',
+        },
+        {
+          name: 'preRelease',
+          message: `Pre-release (${latestPreRelease.tag_name})`,
+          value: latestPreRelease.tag_name,
+        },
+        {
+          name: 'stable',
+          message: `Stable (${latestRelease.tag_name})`,
+          value: latestPreRelease.tag_name,
+        },
+        {
+          name: 'showAll',
+          message: 'Show all versions',
+          value: null,
+        },
+      ],
+    }
 
     // return ['Development', `Pre-release (${latestPreRelease.tag_name})`, `Stable (${latestRelease.tag_name})`, 'Show all versions']
   }
