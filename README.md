@@ -11,6 +11,7 @@ EZGames CLI Toolkit
 <!-- toc -->
 * [Usage](#usage)
 * [Commands](#commands)
+* [ezgames-cli](#ezgames-cli)
 <!-- tocstop -->
 # Usage
 <!-- usage -->
@@ -28,29 +29,8 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`ezgames hello [FILE]`](#ezgames-hello-file)
 * [`ezgames help [COMMAND]`](#ezgames-help-command)
-* [`ezgames install [FILE]`](#ezgames-install-file)
-
-## `ezgames hello [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ ezgames hello [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-
-EXAMPLE
-  $ ezgames hello
-  hello world from ./src/hello.ts!
-```
-
-_See code: [src/commands/hello.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/hello.ts)_
+* [`ezgames install`](#ezgames-install)
 
 ## `ezgames help [COMMAND]`
 
@@ -69,18 +49,17 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
 
-## `ezgames install [FILE]`
+## `ezgames install`
 
 describe the command here
 
 ```
 USAGE
-  $ ezgames install [FILE]
+  $ ezgames install
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help         show CLI help
+  --release=release
 ```
 
 _See code: [src/commands/install.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/install.ts)_

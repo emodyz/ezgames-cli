@@ -1,10 +1,17 @@
 import {Command, flags as flgs} from '@oclif/command'
-import {where} from '../node-sys'
-import {Listr, ListrContext as Ctx} from 'listr2'
-import {request as gitHubRequest} from '@octokit/request'
+import {where} from '../core/node-sys'
+import {
+  Listr,
+  ListrContext as Ctx,
+} from 'listr2'
 import cli from 'cli-ux'
 import execa from 'execa'
-import collect from 'collect.js'
+import collect, {Collection} from 'collect.js'
+import {TaskWrapper} from 'listr2/dist/lib/task-wrapper'
+import GitHub from '../core/github'
+import {EZG_APP_PATH, EZG_DATA_PATH} from '../core/consts'
+import fs from 'fs-extra'
+import moment from 'moment/moment'
 
 export default class Install extends Command {
   static description = 'describe the command here'
@@ -14,6 +21,8 @@ export default class Install extends Command {
     release: flgs.string(),
   }
 
+  static allReleases: Collection<any>
+
   async run() {
     Install.flags = {
       help: flgs.help({char: 'h'}),
@@ -21,7 +30,7 @@ export default class Install extends Command {
     }
 
     const {flags} = this.parse(Install)
-    let requestedRelease = flags.release
+    let requestedReleaseTag = flags.release
 
     const tasks = new Listr<Ctx>(
       [
@@ -59,35 +68,32 @@ export default class Install extends Command {
             ]),
         },
         {
-          title: 'Install EZGames',
+          title: 'EZGames Installer',
           task: (ctx, task): Listr =>
             task.newListr([
               {
                 title: 'Choose a Version',
-                enabled: (): boolean => !requestedRelease,
-                task: async (ctx, task): Promise<void> => {
+                enabled: (): boolean => !requestedReleaseTag,
+                task: async (ctx, task: any): Promise<void> => {
                   // TODO: Waiting on this pr https://github.com/enquirer/enquirer/pull/307
-                  requestedRelease = await task.prompt<string>(
-                    // @ts-ignore
-                    {
-                      type: 'Select',
-                      choices: (await Install.getVersions()).choices,
-                      message: 'Choose the version of EZGames you wish to install: ',
-                      result() {
-                      // @ts-ignore
-                        return this.focused.value
-                      },
-                    })
+                  requestedReleaseTag = await this.chooseVersion(task)
                 },
               },
               {
-                title: 'Setting up EZGames (2.0.0-beta.3)...',
-                enabled: (): boolean => Boolean(requestedRelease),
-                task: async (): Promise<void> => {
-                  await cli.wait(3000)
-                },
+                title: 'Setting up EZGames...',
+                enabled: (): boolean => Boolean(requestedReleaseTag),
+                task: (ctx, task): Listr =>
+                  task.newListr([
+                    {
+                      title: `Downloading EZGames (${requestedReleaseTag})`,
+                      task: async () => {
+                        await fs.ensureDir(EZG_DATA_PATH)
+                        return execa('git', ['clone', '--progress', '-b', `${requestedReleaseTag}`, '--depth', '1', 'git@github.com:emodyz/MultigamingPanel.git', `${EZG_APP_PATH}`]).stderr
+                      },
+                    },
+                  ]),
               },
-            ]),
+            ], {concurrent: false}),
         },
         {
           title: 'Git Status',
@@ -103,7 +109,6 @@ export default class Install extends Command {
 
     try {
       await tasks.run()
-      console.log(requestedRelease)
     } catch (error) {
       // it will collect all the errors encountered if { exitOnError: false } is set as an option but will not throw them
       // elsewise it will throw the first error encountered as expected
@@ -111,34 +116,72 @@ export default class Install extends Command {
     }
   }
 
-  /*
-  async chooseVersion():Promise<string> {
+  async chooseVersion(task: TaskWrapper<Ctx, any>): Promise<string> {
+    const choice = await task.prompt<string>(
+      // @ts-ignore
+      {
+        type: 'Select',
+        choices: (await Install.getVersions()).choices,
+        message: 'Choose the version of EZGames you wish to install: ',
+        result() {
+          // @ts-ignore
+          return this.focused.value
+        },
+      })
 
-  } */
+    if (choice === 'other') {
+      return this.chooseOtherVersion(task)
+    }
 
-  static async getVersions(): Promise<{
-    availableVersions: Array<string> | undefined;
-    choices: Array<Record<string, string | null>>;
-  }> {
-    const latestRelease = (await gitHubRequest('GET /repos/{owner}/{repo}/releases/latest', {
+    return choice
+  }
+
+  async chooseOtherVersion(task: TaskWrapper<Ctx, any>): Promise<string> {
+    const choice = await task.prompt<string>(
+      // @ts-ignore
+      {
+        type: 'Select',
+        choices: Install.allReleases.map(item => {
+          return {
+            name: item.tag_name,
+            message: `${item.tag_name} (${moment(item.published_at).format('MMM Do YY')})`,
+          }
+        })
+        .push({
+          name: 'back',
+          message: 'Go Back',
+        })
+        .all(),
+        message: 'Choose the version of EZGames you wish to install: ',
+      })
+
+    if (choice === 'back') {
+      return this.chooseVersion(task)
+    }
+
+    return choice
+  }
+
+  static async getVersions(): Promise<{ availableVersions: Array<string> | undefined; choices: Array<Record<string, string | null>>}> {
+    const latestRelease = (await GitHub.requestWithAuth('GET /repos/{owner}/{repo}/releases/latest', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',
     })).data
 
-    const allReleases = collect((await gitHubRequest('GET /repos/{owner}/{repo}/releases', {
+    Install.allReleases = collect((await GitHub.requestWithAuth('GET /repos/{owner}/{repo}/releases', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',
     })).data)
 
-    const latestPreRelease = allReleases.filter((item: any) => item.prerelease).first()
+    const latestPreRelease = Install.allReleases.filter((item: any) => item.prerelease).first()
 
     return {
-      availableVersions: allReleases.map(item => item.tag_name).all(),
+      availableVersions: Install.allReleases.map(item => item.tag_name).all(),
       choices: [
         {
-          name: 'dev',
-          message: 'Development',
-          value: 'dev',
+          name: 'stable',
+          message: `Stable (${latestRelease.tag_name})`,
+          value: latestRelease.tag_name,
         },
         {
           name: 'preRelease',
@@ -146,18 +189,16 @@ export default class Install extends Command {
           value: latestPreRelease.tag_name,
         },
         {
-          name: 'stable',
-          message: `Stable (${latestRelease.tag_name})`,
-          value: latestPreRelease.tag_name,
+          name: 'dev',
+          message: 'Development',
+          value: 'dev',
         },
         {
           name: 'showAll',
           message: 'Show all versions',
-          value: null,
+          value: 'other',
         },
       ],
     }
-
-    // return ['Development', `Pre-release (${latestPreRelease.tag_name})`, `Stable (${latestRelease.tag_name})`, 'Show all versions']
   }
 }

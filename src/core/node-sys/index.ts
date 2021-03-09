@@ -24,8 +24,8 @@ const SYS_COMMANDS: any = {
   pacman: 'sudo pacman -S',
   pkg: 'pkg install',
   pkg_add: 'pkg_add',
-  crew: 'crew install'
-};
+  crew: 'crew install',
+}
 
 /**
  * Supported package managers
@@ -39,25 +39,25 @@ const SYS_MANAGERS: any = {
   netbsd: ['none'],
   win64: ['choco'],
   shell: ['powershell'],
-};
+}
 
 function Sys() { }
 
 function sysManager() {
-  let managers: any = SYS_MANAGERS[process.platform];
+  let managers: any = SYS_MANAGERS[process.platform]
   if (!managers || !managers.length) {
-    return 'unknown platform \'' + process.platform + '\'';
+    return 'unknown platform \'' + process.platform + '\''
   }
 
   managers = managers.filter(function (mng: any) {
-    return (where(mng) !== null);
-  });
+    return (where(mng) !== null)
+  })
 
   if (!managers.length) {
-    return 'System OS package manager not found';
+    return 'System OS package manager not found'
   }
 
-  return SYS_COMMANDS[managers[0]].split(' ');
+  return SYS_COMMANDS[managers[0]].split(' ')
 }
 
 /**
@@ -74,16 +74,15 @@ function sysManager() {
  * @throws if `process.platform` is none of darwin, freebsd, linux, sunos or win32.
  */
 export const packager = Sys.packager = function () {
-  let sys = sysManager();
+  const sys = sysManager()
   if (isArray(sys) && sys[0])
     return {
       sudo: (sys[0] === 'sudo'),
       command: ((!sys[2]) ? sys[0] : sys[1]),
-      installer: sys.join(' ')
+      installer: sys.join(' '),
     }
-  else
-    return new Error(sys);
-};
+  return new Error(sys)
+}
 
 /**
  * Install package using the system package manager command.
@@ -100,38 +99,43 @@ export const packager = Sys.packager = function () {
  */
 export const installer = Sys.installer = function (application: any, progress: any) {
   if (!application)
-    return new Promise((resolve, reject) => { return reject("No package, application name missing."); });
+    return new Promise((resolve, reject) => {
+      return reject('No package, application name missing.')
+    })
 
-  let manager = sysManager();
+  const manager = sysManager()
   if (!isArray(manager))
-    return new Promise((resolve, reject) => { return reject(manager); });
-  let cmd = manager[0];
-  let args = null;
-  let install = null;
+    return new Promise((resolve, reject) => {
+      return reject(manager)
+    })
+  let cmd = manager[0]
+  let args = null
+  let install = null
   if (manager[1])
-    args = [manager[1]];
+    args = [manager[1]]
   if (manager[2])
-    install = [manager[2]];
+    install = [manager[2]]
 
   // @ts-ignore
-  let whatToInstall: any = isArray(application) ? [].concat(application).concat(['-y']) : [].concat([application]).concat(/*['-y']*/);
-  let system = whatToInstall;
+  const whatToInstall: any = isArray(application) ? [].concat(application).concat(['-y']) : [].concat([application]).concat(/* ['-y'] */)
+  let system = whatToInstall
   if ((args) && (!install))
-    system = args.concat(whatToInstall);
+    system = args.concat(whatToInstall)
   else if ((args) && (install))
-    system = args.concat(install).concat(whatToInstall);
+    system = args.concat(install).concat(whatToInstall)
 
   if (cmd != 'powershell') {
     if (cmd.includes('choco') && process.platform == 'win32') {
-      cmd = where('choco');
-      system = [cmd].concat(system);
-      cmd = join(__dn, 'bin', 'sudo.bat');
+      cmd = where('choco')
+      system = [cmd].concat(system)
+      cmd = join(__dn, 'bin', 'sudo.bat')
     }
 
-    return spawning(cmd, system, progress);
-  } else {
-    return new Promise((resolve, reject) => { return reject('No package manager installed!') });
+    return spawning(cmd, system, progress)
   }
+  return new Promise((resolve, reject) => {
+    return reject('No package manager installed!')
+  })
 }
 
 /**
@@ -142,11 +146,11 @@ export const installer = Sys.installer = function (application: any, progress: a
  * @param executable
  */
 export const where = Sys.where = function (executable: string) {
-  let found = sync(executable, {
-    nothrow: true
-  });
+  const found = sync(executable, {
+    nothrow: true,
+  })
 
-  return found;
+  return found
 }
 
 /**
@@ -181,101 +185,100 @@ export const spawning = Sys.spawning = function (command: any, argument: any, pr
       onerror: null,
       onprogress: null,
       onmessage: null,
-    };
+    }
 
-    options.stdio = options.stdio || 'pipe';
-    const forked = isString(options.fork) ? fork(options.fork) : null;
-    let progress = progressOptions;
+    options.stdio = options.stdio || 'pipe'
+    const forked = isString(options.fork) ? fork(options.fork) : null
+    let progress = progressOptions
     if (isObjectOnly(progressOptions))
-      options = Object.assign(options, progressOptions);
+      options = Object.assign(options, progressOptions)
 
     if (isFunction(options.onprogress))
-      progress = options.onprogress;
+      progress = options.onprogress
 
-    let error: any = null;
-    let output: any = null;
-    let sudo = options.sudo || false;
-    let onerror = options.onerror || null;
-    let onmessage = options.onmessage || null;
+    let error: any = null
+    let output: any = null
+    const sudo = options.sudo || false
+    const onerror = options.onerror || null
+    const onmessage = options.onmessage || null
 
-    delete options.sudo;
-    delete options.fork;
-    delete options.onerror;
-    delete options.onprogress;
-    delete options.onmessage;
+    delete options.sudo
+    delete options.fork
+    delete options.onerror
+    delete options.onprogress
+    delete options.onmessage
 
     if (sudo) {
-      argument = [command].concat(argument);
-      command = (isWindows()) ? join(__dn, 'bin', 'sudo.bat') : 'sudo';
-    };
+      argument = [command].concat(argument)
+      command = (isWindows()) ? join(__dn, 'bin', 'sudo.bat') : 'sudo'
+    }
 
-    const spawned = spawn(command, argument, options);
-    spawned.on('error', (data) => {
+    const spawned = spawn(command, argument, options)
+    spawned.on('error', data => {
+      return reject(data)
+    })
 
-      return reject(data);
-    });
-
-    spawned.on('close', (code) => {
+    spawned.on('close', code => {
       if (code === 0) {
-        return resolve(output);
+        return resolve(output)
       }
 
-      return reject(error + code);
-    });
+      return reject(error + code)
+    })
 
-    spawned.on('exit', (code) => {
+    spawned.on('exit', code => {
       if (forked)
         setTimeout(() => {
-          forked.kill();
-        }, 1000);
+          forked.kill()
+        }, 1000)
 
       if (code === 0) {
-        return resolve(output);
+        return resolve(output)
       }
 
-      return reject(error + code);
-    });
+      return reject(error + code)
+    })
 
-    spawned.stdout.on('data', (data) => {
-      let input = data.toString();
-      output += input;
+    spawned.stdout.on('data', data => {
+      const input = data.toString()
+      output += input
       try {
         if (isFunction(progress)) {
-          output = progress({ spawn: spawned, output: input, fork: forked }) || output;
+          output = progress({spawn: spawned, output: input, fork: forked}) || output
         }
       } catch (e) {
-        return reject(e.toString());
+        return reject(e.toString())
       }
 
       if (argument.includes('fake-js')) {
-        spawned.kill('SIGKILL');
-        return resolve('For testing only. ' + output);
+        spawned.kill('SIGKILL')
+        return resolve('For testing only. ' + output)
       }
-    });
+    })
 
-    spawned.stderr.on('data', (data) => {
-      let err = data.toString();
-      error += err;
+    spawned.stderr.on('data', data => {
+      const err = data.toString()
+      error += err
       if (isFunction(onerror))/* c8 ignore next */
-        error = onerror(err) || error;
-    });
+        error = onerror(err) || error
+    })
 
     if (forked) {
-      forked.on('message', (data) => {
+      forked.on('message', data => {
         if (isFunction(onmessage))
-          onmessage(data);
-      });
+          onmessage(data)
+      })
     }
 
     // @ts-ignore
     if (argument.includes('fake-js') && Object.getOwnPropertyDescriptor(process, 'platform').value == 'darwin') {
-      spawned.kill('SIGKILL');
-      return resolve('For testing only. ' + output);
+      spawned.kill('SIGKILL')
+      return resolve('For testing only. ' + output)
     }
-  });
+  })
 }
 
-let toString = Object.prototype.toString;
+const toString = Object.prototype.toString
 
 /**
  * Determine if a value is an Array.
@@ -284,7 +287,7 @@ let toString = Object.prototype.toString;
  * @returns {boolean} True if value is an Array, otherwise false.
  */
 export const isArray = Sys.isArray = function (value: any) {
-  return toString.call(value) === '[object Array]';
+  return toString.call(value) === '[object Array]'
 }
 
 /**
@@ -294,7 +297,7 @@ export const isArray = Sys.isArray = function (value: any) {
  * @returns {boolean} True if the value is undefined, otherwise false.
  */
 export const isUndefined = Sys.isUndefined = function (value: any) {
-  return typeof value === 'undefined';
+  return typeof value === 'undefined'
 }
 
 /**
@@ -305,7 +308,7 @@ export const isUndefined = Sys.isUndefined = function (value: any) {
  */
 export const isBuffer = Sys.isBuffer = function (value: any) {
   return value !== null && !isUndefined(value) && value.constructor !== null && !isUndefined(value.constructor) &&
-    typeof value.constructor.isBuffer === 'function' && value.constructor.isBuffer(value);
+    typeof value.constructor.isBuffer === 'function' && value.constructor.isBuffer(value)
 }
 
 /**
@@ -315,7 +318,7 @@ export const isBuffer = Sys.isBuffer = function (value: any) {
  * @returns {boolean} True if value is an ArrayBuffer, otherwise false
  */
 export const isArrayBuffer = Sys.isArrayBuffer = function (value: any) {
-  return toString.call(value) === '[object ArrayBuffer]';
+  return toString.call(value) === '[object ArrayBuffer]'
 }
 
 /**
@@ -325,7 +328,7 @@ export const isArrayBuffer = Sys.isArrayBuffer = function (value: any) {
  * @returns {boolean} True if value is a String, otherwise false.
  */
 export const isString = Sys.isString = function (value: any) {
-  return typeof value === 'string';
+  return typeof value === 'string'
 }
 
 /**
@@ -335,7 +338,7 @@ export const isString = Sys.isString = function (value: any) {
  * @returns {boolean} True if value is a Number, otherwise false.
  */
 export const isNumber = Sys.isNumber = function (value: any) {
-  return typeof value === 'number';
+  return typeof value === 'number'
 }
 
 /**
@@ -345,7 +348,7 @@ export const isNumber = Sys.isNumber = function (value: any) {
  * @returns {boolean} True if value is an Object, otherwise false.
  */
 export const isObject = Sys.isObject = function (value: any) {
-  return value !== null && typeof value === 'object';
+  return value !== null && typeof value === 'object'
 }
 
 /**
@@ -356,11 +359,11 @@ export const isObject = Sys.isObject = function (value: any) {
  */
 export const isObjectOnly = Sys.isObjectOnly = function (value: any) {
   if (toString.call(value) !== '[object Object]') {
-    return false;
+    return false
   }
 
-  let prototype = Object.getPrototypeOf(value);
-  return prototype === null || prototype === Object.prototype;
+  const prototype = Object.getPrototypeOf(value)
+  return prototype === null || prototype === Object.prototype
 }
 
 /**
@@ -370,7 +373,7 @@ export const isObjectOnly = Sys.isObjectOnly = function (value: any) {
  * @returns {boolean} True if value is a Blob, otherwise false
  */
 export const isBlob = Sys.isBlob = function (value: any) {
-  return toString.call(value) === '[object Blob]';
+  return toString.call(value) === '[object Blob]'
 }
 
 /**
@@ -380,7 +383,7 @@ export const isBlob = Sys.isBlob = function (value: any) {
  * @returns {boolean} True if value is a Function, otherwise false
  */
 export const isFunction = Sys.isFunction = function (value: any) {
-  return toString.call(value) === '[object Function]';
+  return toString.call(value) === '[object Function]'
 }
 
 /**
@@ -390,7 +393,7 @@ export const isFunction = Sys.isFunction = function (value: any) {
  * @returns {boolean} True if value is a Date, otherwise false
  */
 export const isDate = Sys.isDate = function (value: any) {
-  return toString.call(value) === '[object Date]';
+  return toString.call(value) === '[object Date]'
 }
 
 /**
@@ -400,7 +403,7 @@ export const isDate = Sys.isDate = function (value: any) {
  * @returns {boolean} True if value is a Stream, otherwise false
  */
 export const isStream = Sys.isStream = function (value: any) {
-  return isObject(value) && isFunction(value.pipe);
+  return isObject(value) && isFunction(value.pipe)
 }
 
 /**
@@ -410,7 +413,7 @@ export const isStream = Sys.isStream = function (value: any) {
  * @returns {boolean} True if value is a boolean, otherwise false
  */
 export const isBool = Sys.isBool = function (value: any) {
-  return (value === true) || (value === false);
+  return (value === true) || (value === false)
 }
 
 /**
@@ -420,7 +423,7 @@ export const isBool = Sys.isBool = function (value: any) {
  * @returns {boolean} True if value is a null, otherwise false
  */
 export const isNull = Sys.isNull = function (value: any) {
-  return value === null;
+  return value === null
 }
 
 /**
@@ -429,7 +432,7 @@ export const isNull = Sys.isNull = function (value: any) {
  * @returns {boolean} True if Windows OS, otherwise false
  */
 export const isWindows = Sys.isWindows = function () {
-  return process.platform === 'win32';
+  return process.platform === 'win32'
 }
 
 /**
@@ -438,7 +441,7 @@ export const isWindows = Sys.isWindows = function () {
  * @returns {boolean} True if Linux OS, otherwise false
  */
 export const isLinux = Sys.isLinux = function () {
-  return process.platform === 'linux';
+  return process.platform === 'linux'
 }
 
 /**
@@ -447,7 +450,7 @@ export const isLinux = Sys.isLinux = function () {
  * @returns {boolean} True if Apple macOS, otherwise false
  */
 export const isMac = Sys.isMac = function () {
-  return process.platform === 'darwin';
+  return process.platform === 'darwin'
 }
 
 /**
@@ -457,5 +460,5 @@ export const isMac = Sys.isMac = function () {
  */
 // export const require = createRequire(import.meta.url);
 
-export default Sys;
-export const System = Sys;
+export default Sys
+export const System = Sys
