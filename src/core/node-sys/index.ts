@@ -43,14 +43,14 @@ const SYS_MANAGERS: any = {
 
 function Sys() { }
 
-function sysManager() {
+function sysManager(): any {
   let managers: any = SYS_MANAGERS[process.platform]
   if (!managers || !managers.length) {
-    return 'unknown platform \'' + process.platform + '\''
+    throw new Error('Unsupported platform \'' + process.platform + '\'')
   }
 
   managers = managers.filter(function (mng: any) {
-    return (where(mng) !== null)
+    return mng /*(where(mng) !== null)*/
   })
 
   if (!managers.length) {
@@ -81,7 +81,7 @@ export const packager = Sys.packager = function () {
       command: ((!sys[2]) ? sys[0] : sys[1]),
       installer: sys.join(' '),
     }
-  return new Error(sys)
+  throw new Error(sys)
 }
 
 /**
@@ -97,7 +97,7 @@ export const packager = Sys.packager = function () {
  * @rejects On any spawn error, or if `process.platform` is none of
  * darwin, freebsd, linux, sunos or win32.
  */
-export const installer = Sys.installer = function (application: any, progress: any) {
+export const installer = Sys.installer = function (application: any, progress: any): any {
   if (!application)
     return new Promise((resolve, reject) => {
       return reject('No package, application name missing.')
@@ -117,7 +117,7 @@ export const installer = Sys.installer = function (application: any, progress: a
     install = [manager[2]]
 
   // @ts-ignore
-  const whatToInstall: any = isArray(application) ? [].concat(application).concat(['-y']) : [].concat([application]).concat(/* ['-y'] */)
+  const whatToInstall: any = isArray(application) ? [].concat(application).concat(['-y']) : [].concat([application]).concat(['-y'])
   let system = whatToInstall
   if ((args) && (!install))
     system = args.concat(whatToInstall)
@@ -136,6 +136,28 @@ export const installer = Sys.installer = function (application: any, progress: a
   return new Promise((resolve, reject) => {
     return reject('No package manager installed!')
   })
+}
+
+export const testWin = function () {
+  const CMD: any = {
+    win32: join(__dn, 'bin', 'sudo.bat'),
+    darwin: 'sudo osascript'
+  };
+  const SYSTEM: any = {
+    win32: join(__dn, 'bin', 'installChocolatey.cmd'),
+    darwin: join(__dn, 'bin','xcode-brew-install.scpt')
+  };
+
+  return CMD[process.platform] +' '+ [SYSTEM[process.platform]]
+
+  /*
+  return  spawning(CMD[process.platform], [SYSTEM[process.platform]], progress)
+    .then(function () {
+      console.log('Finished...')
+    })
+    .catch(function (err) {
+      console.error(err);
+    })*/
 }
 
 /**

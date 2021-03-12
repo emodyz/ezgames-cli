@@ -3,7 +3,7 @@ import {request} from '@octokit/request'
 export default class GitHub {
   public static requestWithAuth = request.defaults({
     headers: {
-      authorization: 'token 22899cef2b1e2fd31b299b354d107f0fa7383b94',
+      authorization: 'token e12aa60c10ef896220582de8daf851d903f78e9c',
     },
   });
 }

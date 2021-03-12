@@ -58,10 +58,9 @@ USAGE
   $ ezgames install
 
 OPTIONS
-  -h, --help         show CLI help
-  --release=release
+  -h, --help             show CLI help
+  -r, --release=release  GitHub Release Tag
 ```
 
 _See code: [src/commands/install.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/install.ts)_
 <!-- commandsstop -->
-# ezgames-cli
