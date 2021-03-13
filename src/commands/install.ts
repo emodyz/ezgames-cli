@@ -1,5 +1,5 @@
 import {Command, flags as flgs} from '@oclif/command'
-import {where, installer, packager, isWindows} from '../core/node-sys'
+import {where, packager, SYS_COMMANDS} from '../core/node-sys'
 import {
   Listr,
   ListrContext as Ctx,
@@ -12,6 +12,7 @@ import GitHub from '../core/github'
 import {EZG_APP_PATH} from '../core/consts'
 import moment from 'moment/moment'
 import chalk from 'chalk'
+import fs from 'fs-extra'
 
 export default class Install extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -41,44 +42,13 @@ export default class Install extends Command {
       let hasGit = Boolean(where('git'))
       let hasDocker = Boolean(where('docker'))
       const hasDockerCompose = Boolean(where('docker-compose'))
-      let shouldRestartShell = false
+
+      if (!(fs.readdirSync(EZG_APP_PATH).length <= 1)) {
+        throw new Error(chalk`{bgRed.white.bold EZGames has already been installed in: "${EZG_APP_PATH}"}`)
+      }
 
       const tasks = new Listr<Ctx>(
         [
-          {
-            title: 'Package Manager',
-            enabled: (): boolean => !hasPkgM,
-            task: async (ctx, task): Promise<Listr> => {
-              const installChoco = (await task.prompt({
-                type: 'confirm',
-                name: 'installChoco',
-                message: 'Do you wan to install Chocolatey ?',
-              })).installChoco
-              return task.newListr([
-                {
-                  title: 'Installing Chocolatey...',
-                  enabled: (isWindows && installChoco),
-                  task: async () => {
-                    const {stderr} = await execa.command('Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'))', {shell: 'powershell'})
-                    if (stderr) {
-                      return this.error(stderr)
-                    }
-                    shouldRestartShell = true
-                  },
-                },
-              ])
-            },
-          },
-          {
-            title: chalk`{bgRed.white.bold RESTART YOUR SHELL}`,
-            enabled: () => shouldRestartShell,
-            task: async (): Promise<void> => {
-              const {stdout, stderr} = await execa.command('choco -v', {shell: 'powershell'})
-              this.log(stdout)
-              this.log(chalk`{red.bold ===============================}`)
-              this.log(stderr)
-            },
-          },
           {
             title: 'Required Dependencies',
             enabled: (): boolean => hasPkgM,
@@ -89,38 +59,37 @@ export default class Install extends Command {
                   task: async (): Promise<any> => {
                     if (!hasGit) {
                       // await installer('git', task.output)
-                      const {stdout, stderr} = await execa.command('choco install git -y', {shell: 'powershell'})
-                      if (stderr) {
-                        return this.error(stderr)
-                      }
-                      this.log(stdout)
-                      hasGit = true
+                      // hasGit = true
+                      throw new Error(chalk`{yellow.bold Could not find Git on this system.}
+{cyan.bold Please run:} {green.bold ${SYS_COMMANDS[pkgManager.command]} git}
+{bgRed.white.bold Before restarting the installer}`)
                     }
+                    hasGit = Boolean(where('git'))
                   },
                 },
                 {
-                  title: 'Docker',
+                  title: 'Docker Engine',
                   enabled: hasGit,
-                  task: async (): Promise<void> => {
-                    const {stdout, stderr} = await execa.command('git --version', {shell: 'powershell'})
-                    if (stderr) {
-                      return this.error(stderr)
-                    }
-                    this.log(stdout)
+                  task: async (): Promise<any> => {
                     if (!hasDocker) {
-                      await cli.wait(1000)
-                      hasDocker = true
+                      throw new Error(chalk`{yellow.bold Could not find Docker on this system.}
+{cyan.bold Please run:} {green.bold ${SYS_COMMANDS[pkgManager.command]} docker}
+{bgRed.white.bold Before restarting the installer}`)
                     }
+                    hasDocker = Boolean(where('git'))
                   },
                 },
                 {
                   title: 'Docker Compose',
                   enabled: hasDocker,
-                  task: async (): Promise<void> => {
+                  task: async (): Promise<any> => {
                     if (!hasDockerCompose) {
                       await cli.wait(1000)
-                      hasDeps = true
+                      throw new Error(chalk`{yellow.bold Could not find docker-compose on this system.}
+{cyan.bold Please run:} {green.bold ${SYS_COMMANDS[pkgManager.command]} docker-compose}
+{bgRed.white.bold Before restarting the installer}`)
                     }
+                    hasDeps = true
                   },
                 },
               ]),
@@ -128,12 +97,12 @@ export default class Install extends Command {
           {
             title: 'EZGames Installer',
             enabled: (): boolean => hasDeps,
-            task: (ctx, task): Listr =>
+            task: (_, task): Listr =>
               task.newListr([
                 {
                   title: 'Choose a Version',
                   enabled: (): boolean => !requestedReleaseTag,
-                  task: async (ctx, task: any): Promise<void> => {
+                  task: async (_, task: any): Promise<void> => {
                     // TODO: Waiting on this pr https://github.com/enquirer/enquirer/pull/307
                     requestedReleaseTag = await this.chooseVersion(task)
                   },
@@ -141,7 +110,7 @@ export default class Install extends Command {
                 {
                   title: 'Setting up EZGames...',
                   enabled: (): boolean => Boolean(requestedReleaseTag),
-                  task: (ctx, task): Listr =>
+                  task: (_, task): Listr =>
                     task.newListr([
                       {
                         title: `Downloading EZGames (${requestedReleaseTag})`,
@@ -149,7 +118,13 @@ export default class Install extends Command {
                           return execa('git', ['clone', '--progress', '-b', `${requestedReleaseTag}`, '--depth', '1', 'https://github.com/emodyz/MultigamingPanel.git', `${EZG_APP_PATH}`]).stderr
                         },
                       },
-                    ]),
+                      {
+                        title: `Configuring EZGames (${requestedReleaseTag})`,
+                        task: async (_, task: any) => {
+                          await this.configureApp(task)
+                        },
+                      },
+                    ], {concurrent: false}),
                 },
               ], {concurrent: false}),
           },
@@ -159,9 +134,29 @@ export default class Install extends Command {
 
       await tasks.run()
     } catch (error) {
+      this.error(error)
       // it will collect all the errors encountered if { exitOnError: false } is set as an option but will not throw them
       // elsewise it will throw the first error encountered as expected
-      this.error(error)
+      // this.error(error)
+    }
+  }
+
+  async configureApp(task: TaskWrapper<Ctx, any>) {
+    const community: Record<any, any> = await task.prompt<Record<any, any>>(
+      {
+        type: 'Form',
+        message: 'Please provide the following information:',
+        choices: [
+          {name: 'name', message: 'Community Name', initial: 'Emodyz'},
+          {name: 'domain', message: 'Domain Name', initial: 'ezg.emodyz.eu'},
+        ],
+      })
+
+    if (community.name === 'Emodyz' || community.domain === 'ezg.emodyz.eu') {
+      throw new Error('Please answer the question.')
+    }
+    return {
+      community,
     }
   }
 

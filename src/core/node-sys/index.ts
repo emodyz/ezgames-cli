@@ -9,7 +9,7 @@ const sync = which.sync
 /**
  * Supported package commands
  */
-const SYS_COMMANDS: any = {
+export const SYS_COMMANDS: any = {
   brew: 'brew install',
   port: 'sudo port install',
   pkgin: 'sudo pkgin install',
