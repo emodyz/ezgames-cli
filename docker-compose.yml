@@ -1,0 +1,16 @@
+version: '3'
+services:
+  debian:
+    image: emodyz/ezgames-cli-debian
+    tty: true
+    build:
+      context: .
+      dockerfile: docker/debian/Dockerfile
+    container_name: ezg-cli-debian
+    volumes:
+      - '.:/usr/share/emodyz/ezg-cli'
+    networks:
+      - ezgames
+networks:
+  ezgames:
+    driver: bridge
