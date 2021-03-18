@@ -11,7 +11,6 @@ EZGames CLI Toolkit
 <!-- toc -->
 * [Usage](#usage)
 * [Commands](#commands)
-* [ezgames-cli](#ezgames-cli)
 <!-- tocstop -->
 # Usage
 <!-- usage -->
@@ -29,8 +28,40 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`ezgames config`](#ezgames-config)
+* [`ezgames create:user [FILE]`](#ezgames-createuser-file)
 * [`ezgames help [COMMAND]`](#ezgames-help-command)
 * [`ezgames install`](#ezgames-install)
+
+## `ezgames config`
+
+describe the command here
+
+```
+USAGE
+  $ ezgames config
+
+OPTIONS
+  -h, --help  show CLI help
+```
+
+_See code: [src/commands/config/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/config/index.ts)_
+
+## `ezgames create:user [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ ezgames create:user [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/create/user.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/create/user.ts)_
 
 ## `ezgames help [COMMAND]`
 
@@ -51,7 +82,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2
 
 ## `ezgames install`
 
-describe the command here
+[35m[1mEZGames[22m[39m [36mInstaller[39m
 
 ```
 USAGE
