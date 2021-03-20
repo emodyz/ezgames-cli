@@ -1,25 +1,21 @@
 import {Command, flags} from '@oclif/command'
 
 export default class CreateUser extends Command {
-  static description = 'describe the command here'
+  static description = 'Create a user'
 
   static flags = {
     help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
+    username: flags.string({char: 'n', description: 'Username of the future user'}),
+    email: flags.string({char: 'm', description: 'Email of the future user'}),
+    password: flags.string({char: 'p', description: 'Password username of the future user'}),
+    role: flags.string({char: 'r', description: 'Role to be assigned to the future user'}),
   }
-
-  static args = [{name: 'file'}]
 
   async run() {
-    const {args, flags} = this.parse(CreateUser)
-
-    const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /Users/wirk/Documents/Work/Emodyz/ezgames-cli/src/commands/create/user.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
-    }
+    const {flags} = this.parse(CreateUser)
   }
+}
+
+export async function createUserForm() {
+
 }

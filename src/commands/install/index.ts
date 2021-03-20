@@ -9,12 +9,12 @@ import execa from 'execa'
 import collect, {Collection} from 'collect.js'
 import {TaskWrapper} from 'listr2/dist/lib/task-wrapper'
 import GitHub from '../../core/github'
-import {EZG_APP_ENV_PATH, EZG_APP_PATH} from '../../core/consts'
+import {EZG_APP_PATH} from '../../core/consts'
 import moment from 'moment/moment'
 import chalk from 'chalk'
-import fs, {copyFile} from 'fs-extra'
-import path from 'path'
-import {configureApp, saveEnv} from '../config'
+import fs from 'fs-extra'
+import {configureAppForm, getAppEnv, saveEnv} from '../config'
+import {tick as checkMark} from 'figures'
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -98,7 +98,7 @@ export default class InstallIndex extends Command {
         {
           title: 'EZGames Installer',
           enabled: (): boolean => hasDeps,
-          task: (_, task): Listr =>
+          task: (ctx, task): Listr =>
             task.newListr([
               {
                 title: 'Choose a Version',
@@ -109,31 +109,50 @@ export default class InstallIndex extends Command {
                 },
               },
               {
-                title: 'Setting up EZGames...',
+                title: 'Downloading EZGames ...',
                 enabled: (): boolean => Boolean(requestedReleaseTag),
-                task: (_, task): Listr =>
-                  task.newListr([
-                    {
-                      title: `Downloading EZGames (${requestedReleaseTag})`,
-                      task: async () => {
-                        return execa('git', ['clone', '--progress', '-b', `${requestedReleaseTag}`, '--depth', '1', 'https://github.com/emodyz/MultigamingPanel.git', `${EZG_APP_PATH}`]).stderr
-                      },
-                    },
-                    {
-                      title: `Configuring EZGames (${requestedReleaseTag})`,
-                      task: async (_, task: any) => {
-                        saveEnv(await configureApp(task))
-                      },
-                    },
-                  ], {concurrent: false}),
+                task: async (_, task) => {
+                  task.title = `Downloading EZGames (${requestedReleaseTag})...`
+                  return execa('git', ['clone', '--progress', '-b', `${requestedReleaseTag}`, '--depth', '1', 'https://github.com/emodyz/MultigamingPanel.git', `${EZG_APP_PATH}`]).stderr
+                },
+              },
+              {
+                title: 'Configuring EZGames ...',
+                enabled: (): boolean => Boolean(requestedReleaseTag),
+                task: async (_, task: any) => {
+                  task.title = `Configuring EZGames (${requestedReleaseTag})...`
+
+                  saveEnv(await configureAppForm(task))
+
+                  ctx.isConfigSuccessful = true
+                },
               },
             ], {concurrent: false}),
+        },
+        {
+          title: 'Starting EZGames...',
+          enabled: ctx => Boolean(ctx.isConfigSuccessful),
+          task: async (ctx, task) => {
+            task.title = `Starting EZGames (${requestedReleaseTag})...`
+            await cli.wait(3000)
+            ctx.isStartUpSuccessful = true
+          },
+        },
+        {
+          title: 'Create your first User',
+          enabled: ctx => Boolean(ctx.isStartUpSuccessful),
+          task: async ctx => {
+            await cli.wait(3000)
+            ctx.isInstallSuccessful = true
+          },
         },
       ],
       {concurrent: false},
     )
 
     await tasks.run()
+    this.log(' ')
+    this.log(chalk.cyan`{green ${checkMark}} {cyan.bold EZGames} {green ${requestedReleaseTag}} is now {green.bold available} at {magenta.underline ${getAppEnv().APP_URL}}`)
   }
 
   async chooseVersion(task: TaskWrapper<Ctx, any>): Promise<string> {

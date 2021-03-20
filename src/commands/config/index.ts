@@ -13,17 +13,18 @@ export function getAppEnv(): any {
   return parseEnv(readFileSync(EZG_APP_ENV_EXAMPLE_PATH, 'utf-8'))
 }
 
-export async function configureApp(task?: TaskWrapper<Ctx, any>) {
+export async function configureAppForm(task?: TaskWrapper<Ctx, any>) {
   const forms = [
     {
       type: 'form',
       message: 'Please provide the following information:',
       choices: [
         {name: 'name', message: 'Community Name'},
+        {name: 'wmEmail', message: 'WebMaster\'s email address'},
         {name: 'domain', message: 'Domain Name (Recommended) or IPv4'},
       ],
       validate: (input: any) => {
-        return validator.isAlpha(input.name) && (validator.isFQDN(input.domain) || isIPv4(input.domain))
+        return validator.isAlpha(input.name) && (validator.isFQDN(input.domain) || isIPv4(input.domain)) && validator.isEmail(input.wmEmail)
       },
     },
 
@@ -35,9 +36,17 @@ export async function configureApp(task?: TaskWrapper<Ctx, any>) {
       name: 'name',
       message: 'Community Name',
       required: true,
-      initial: '',
       validate: (input: string) => {
         return validator.isAlpha(input)
+      },
+    },
+    {
+      type: 'input',
+      name: 'wmEmail',
+      message: 'WebMaster\'s email address',
+      required: true,
+      validate: (input: string) => {
+        return validator.isEmail(input)
       },
     },
     {
@@ -54,19 +63,30 @@ export async function configureApp(task?: TaskWrapper<Ctx, any>) {
   return task ? task.prompt(forms) : prompt(questions)
 }
 
-export function saveEnv(answer: { name: string; domain: string}) {
+export function saveEnv(answers: { name: string; domain: string; wmEmail: string}) {
   const env = getAppEnv()
 
-  env.APP_NAME = `"EZGames | ${answer.name}"`
+  const isDomain = validator.isFQDN(answers.domain)
+
+  env.APP_NAME = `"EZGames | ${answers.name}"`
   env.APP_DEBUG = false
   env.APP_ENV = 'production'
-  env.APP_URL = validator.isFQDN(answer.domain) ? `https://${answer.domain}` : `http://${answer.domain}`
+  env.APP_URL = isDomain ? `https://${answers.domain}` : `http://${answers.domain}`
 
-  env.SANCTUM_STATEFUL_DOMAINS = `${answer.domain},localhost,127.0.0.1,127.0.0.1:8000,::1`
-  env.SESSION_DOMAIN = answer.domain
+  env.SANCTUM_STATEFUL_DOMAINS = `${answers.domain},localhost,127.0.0.1,127.0.0.1:8000,::1`
+  env.SESSION_DOMAIN = answers.domain
 
-  env.DB_DATABASE = 'ezg.db'
   env.DB_PASSWORD = randomBytes(20).toString('hex')
+
+  if (!isDomain) {
+    delete env.LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT
+    delete env.LARAVEL_WEBSOCKETS_SSL_LOCAL_PK
+    delete env.LARAVEL_WEBSOCKETS_SSL_PASSPHRASE
+    delete env.LARAVEL_WEBSOCKETS_VERIFY_PEER
+  }
+
+  env.MAIL_FROM_ADDRESS = `"${answers.wmEmail}"`
+  env.MAIL_FROM_NAME = `"${answers.name}"`
 
   writeFileSync(EZG_APP_ENV_PATH, stringifyEnv(env))
 }
@@ -76,9 +96,16 @@ export default class ConfigIndex extends Command {
 
   static flags = {
     help: flags.help({char: 'h'}),
+    name: flags.string({char: 'n', description: 'Community Name'}),
+    domain: flags.string({char: 'd', description: 'Domain Name or IPv4'}),
+    email: flags.string({char: 'm', description: 'WebMaster\'s email address'}),
   }
 
   async run() {
-    console.log(await configureApp())
+    const {flags} = this.parse(ConfigIndex)
+    if (flags.domain && flags.name && flags.email) {
+      return saveEnv({name: flags.name, domain: flags.domain, wmEmail: flags.email})
+    }
+    saveEnv(await configureAppForm())
   }
 }
