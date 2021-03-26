@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import {EZG_APP_ENV_EXAMPLE_PATH, EZG_APP_ENV_PATH} from '../../core/consts'
+import {EZG_APP_ENV_EXAMPLE_PATH, EZG_APP_ENV_PATH} from '../../core/paths'
 import {prompt} from 'enquirer'
 import validator from 'validator'
 import {TaskWrapper} from 'listr2/dist/lib/task-wrapper'
@@ -14,7 +14,7 @@ export function getAppEnv(): any {
 }
 
 export async function configureAppForm(task?: TaskWrapper<Ctx, any>) {
-  const forms = [
+  const form =
     {
       type: 'form',
       message: 'Please provide the following information:',
@@ -26,9 +26,7 @@ export async function configureAppForm(task?: TaskWrapper<Ctx, any>) {
       validate: (input: any) => {
         return validator.isAlpha(input.name) && (validator.isFQDN(input.domain) || isIPv4(input.domain)) && validator.isEmail(input.wmEmail)
       },
-    },
-
-  ]
+    }
 
   const questions = [
     {
@@ -59,8 +57,8 @@ export async function configureAppForm(task?: TaskWrapper<Ctx, any>) {
       },
     },
   ]
-  // @ts-ignore
-  return task ? task.prompt(forms) : prompt(questions)
+
+  return task ? task.prompt(form) : prompt(questions)
 }
 
 export function saveEnv(answers: { name: string; domain: string; wmEmail: string}) {
