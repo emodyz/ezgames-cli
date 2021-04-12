@@ -146,7 +146,7 @@ export default class InstallIndex extends Command {
           enabled: ctx => Boolean(ctx.isConfigSuccessful),
           task: async ctx => {
             await dockerComposeUp(EZG_APP_PATH, getAppEnv())
-            await cli.wait(10000)
+            await cli.wait(30000)
             await waitForHealthyApp()
             // await dockerComposeExec('php', 'php artisan key:generate', EZG_APP_PATH, getAppEnv())
             ctx.isStartUpSuccessful = true
