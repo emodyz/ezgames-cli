@@ -4,7 +4,8 @@ import {getAppEnv} from '../env'
 import * as rax from 'retry-axios'
 
 export async function getAppHealth() {
-  const {data: health} = await axios.get(`${getAppEnv().APP_URL}/health`, {
+  // const {data: health} = await axios.get(`${getAppEnv().APP_URL}/health`, {
+  const {data: health} = await axios.get('http://localhost/health', {
     httpsAgent: new https.Agent(
       {
         rejectUnauthorized: false,
