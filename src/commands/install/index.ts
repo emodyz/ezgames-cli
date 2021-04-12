@@ -13,8 +13,13 @@ import {EZG_APP_PATH} from '../../core/paths'
 import moment from 'moment/moment'
 import chalk from 'chalk'
 import fs from 'fs-extra'
-import {configureAppForm, getAppEnv, saveEnv} from '../config'
+import {configureAppForm} from '../config'
 import {tick as checkMark} from 'figures'
+import {dockerComposeLog, dockerComposeUp} from '../../core/docker/compose-up'
+import {getAppEnv, saveEnv} from '../../core/env'
+import {dockerComposeBuild} from '../../core/docker/compose-build'
+import {waitForHealthyApp} from '../../core/api/status'
+import {dockerComposeExec} from '../../core/docker/compose-exec'
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -130,16 +135,25 @@ export default class InstallIndex extends Command {
             ], {concurrent: false}),
         },
         {
+          title: 'Building EZGames...',
+          enabled: ctx => Boolean(ctx.isConfigSuccessful),
+          task: async () => {
+            return dockerComposeBuild(EZG_APP_PATH, getAppEnv())
+          },
+        },
+        {
           title: 'Starting EZGames...',
           enabled: ctx => Boolean(ctx.isConfigSuccessful),
-          task: async (ctx, task) => {
-            task.title = `Starting EZGames (${requestedReleaseTag})...`
-            await cli.wait(3000)
+          task: async ctx => {
+            await dockerComposeUp(EZG_APP_PATH, getAppEnv())
+            await cli.wait(10000)
+            await waitForHealthyApp()
+            // await dockerComposeExec('php', 'php artisan key:generate', EZG_APP_PATH, getAppEnv())
             ctx.isStartUpSuccessful = true
           },
         },
         {
-          title: 'Create your first User',
+          title: 'Create your administrative account',
           enabled: ctx => Boolean(ctx.isStartUpSuccessful),
           task: async ctx => {
             await cli.wait(3000)
@@ -152,7 +166,7 @@ export default class InstallIndex extends Command {
 
     await tasks.run()
     this.log(' ')
-    this.log(chalk.cyan`{green ${checkMark}} {cyan.bold EZGames} {green ${requestedReleaseTag}} is now {green.bold available} at {magenta.underline ${getAppEnv().APP_URL}}`)
+    this.log(chalk.cyan`{green ${checkMark}} {cyan.bold EZGames} {green ${requestedReleaseTag}} is now {green.bold available} at {cyan.bold.underline ${getAppEnv().APP_URL}}`)
   }
 
   async chooseVersion(task: TaskWrapper<Ctx, any>): Promise<string> {
@@ -226,6 +240,11 @@ export default class InstallIndex extends Command {
           name: 'preRelease',
           message: `Pre-release (${latestPreRelease.tag_name})`,
           value: latestPreRelease.tag_name,
+        },
+        {
+          name: '77',
+          message: 'Feature #77 | Docker is coming 🏴‍☠️',
+          value: 'feature/77',
         },
         {
           name: 'dev',

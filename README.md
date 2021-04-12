@@ -28,10 +28,53 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`ezgames app:start`](#ezgames-appstart)
+* [`ezgames autocomplete [SHELL]`](#ezgames-autocomplete-shell)
 * [`ezgames config`](#ezgames-config)
-* [`ezgames create:user [FILE]`](#ezgames-createuser-file)
+* [`ezgames create:user`](#ezgames-createuser)
 * [`ezgames help [COMMAND]`](#ezgames-help-command)
 * [`ezgames install`](#ezgames-install)
+* [`ezgames test [FILE]`](#ezgames-test-file)
+
+## `ezgames app:start`
+
+Starts the EZGames container
+
+```
+USAGE
+  $ ezgames app:start
+
+OPTIONS
+  -h, --help  show CLI help
+
+ALIASES
+  $ ezgames start
+```
+
+_See code: [src/commands/app/start.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/start.ts)_
+
+## `ezgames autocomplete [SHELL]`
+
+display autocomplete installation instructions
+
+```
+USAGE
+  $ ezgames autocomplete [SHELL]
+
+ARGUMENTS
+  SHELL  shell type
+
+OPTIONS
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+EXAMPLES
+  $ ezgames autocomplete
+  $ ezgames autocomplete bash
+  $ ezgames autocomplete zsh
+  $ ezgames autocomplete --refresh-cache
+```
+
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.3.0/src/commands/autocomplete/index.ts)_
 
 ## `ezgames config`
 
@@ -42,23 +85,28 @@ USAGE
   $ ezgames config
 
 OPTIONS
-  -h, --help  show CLI help
+  -d, --domain=domain  Domain Name or IPv4
+  -h, --help           show CLI help
+  -m, --email=email    WebMaster's email address
+  -n, --name=name      Community Name
 ```
 
 _See code: [src/commands/config/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/config/index.ts)_
 
-## `ezgames create:user [FILE]`
+## `ezgames create:user`
 
-describe the command here
+Create a user
 
 ```
 USAGE
-  $ ezgames create:user [FILE]
+  $ ezgames create:user
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help               show CLI help
+  -m, --email=email        Email of the future user
+  -n, --username=username  Username of the future user
+  -p, --password=password  Password username of the future user
+  -r, --role=role          Role to be assigned to the future user
 ```
 
 _See code: [src/commands/create/user.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/create/user.ts)_
@@ -93,5 +141,21 @@ OPTIONS
   -r, --release=release  GitHub Release Tag
 ```
 
-_See code: [src/commands/install.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/install.ts)_
+_See code: [src/commands/install/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/install/index.ts)_
+
+## `ezgames test [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ ezgames test [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/test.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/test.ts)_
 <!-- commandsstop -->

@@ -5,7 +5,7 @@ import {prompt} from 'enquirer'
 import validator from 'validator'
 import {isIPv4} from 'net'
 
-export async function createUserForm(task?: TaskWrapper<Ctx, any>, role?: string) {
+export async function createUserForm(role?: string, task?: TaskWrapper<Ctx, any>) {
   const form = {
     type: 'form',
     message: 'Create a new user:',
