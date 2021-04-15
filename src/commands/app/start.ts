@@ -13,8 +13,6 @@ export default class AppStart extends Command {
   }
 
   async run() {
-    const {stdout, stderr} = await dockerComposeUp(EZG_APP_PATH, getAppEnv())
-    console.log(stdout)
-    console.error(stderr)
+    await dockerComposeUp(EZG_APP_PATH, getAppEnv(), true)
   }
 }

@@ -2,7 +2,8 @@ extends:
     - oclif
     - oclif-typescript
 rules: {
-  'unicorn/prefer-type-error',
+  'max-params': ['warn', 6],
+  'unicorn/prefer-type-error': 'off',
   'import/no-extraneous-dependencies': 'off',
   'import/extensions': 'off',
   'no-console': 'off',

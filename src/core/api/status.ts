@@ -26,9 +26,9 @@ export async function waitForHealthyApp() {
   rax.attach(axios)
   const {data: health} = await axios.get('http://localhost/health', {
     raxConfig: {
-      retry: 120,
-      noResponseRetries: 120,
-      retryDelay: 1000,
+      retry: 256,
+      noResponseRetries: 256,
+      retryDelay: 2000,
       backoffType: 'static',
     },
   })

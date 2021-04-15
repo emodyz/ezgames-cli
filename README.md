@@ -28,13 +28,32 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`ezgames app:exec [FILE]`](#ezgames-appexec-file)
 * [`ezgames app:start`](#ezgames-appstart)
+* [`ezgames app:status`](#ezgames-appstatus)
 * [`ezgames autocomplete [SHELL]`](#ezgames-autocomplete-shell)
+* [`ezgames build:front [FILE]`](#ezgames-buildfront-file)
 * [`ezgames config`](#ezgames-config)
 * [`ezgames create:user`](#ezgames-createuser)
 * [`ezgames help [COMMAND]`](#ezgames-help-command)
 * [`ezgames install`](#ezgames-install)
-* [`ezgames test [FILE]`](#ezgames-test-file)
+* [`ezgames test`](#ezgames-test)
+
+## `ezgames app:exec [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ ezgames app:exec [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/app/exec.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/exec.ts)_
 
 ## `ezgames app:start`
 
@@ -52,6 +71,23 @@ ALIASES
 ```
 
 _See code: [src/commands/app/start.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/start.ts)_
+
+## `ezgames app:status`
+
+Shows the status of the internal infrastructure
+
+```
+USAGE
+  $ ezgames app:status
+
+OPTIONS
+  -h, --help  show CLI help
+
+ALIASES
+  $ ezgames status
+```
+
+_See code: [src/commands/app/status.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/status.ts)_
 
 ## `ezgames autocomplete [SHELL]`
 
@@ -75,6 +111,22 @@ EXAMPLES
 ```
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.3.0/src/commands/autocomplete/index.ts)_
+
+## `ezgames build:front [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ ezgames build:front [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/build/front.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/build/front.ts)_
 
 ## `ezgames config`
 
@@ -143,18 +195,16 @@ OPTIONS
 
 _See code: [src/commands/install/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/install/index.ts)_
 
-## `ezgames test [FILE]`
+## `ezgames test`
 
-describe the command here
+Dummy Command used to test features
 
 ```
 USAGE
-  $ ezgames test [FILE]
+  $ ezgames test
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
 _See code: [src/commands/test.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/test.ts)_

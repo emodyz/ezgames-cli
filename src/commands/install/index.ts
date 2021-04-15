@@ -135,20 +135,21 @@ export default class InstallIndex extends Command {
             ], {concurrent: false}),
         },
         {
-          title: 'Building EZGames...',
+          title: 'Building EZGames... (This will take a few minutes)',
           enabled: ctx => Boolean(ctx.isConfigSuccessful),
           task: async () => {
-            return dockerComposeBuild(EZG_APP_PATH, getAppEnv())
+            await dockerComposeBuild(EZG_APP_PATH, getAppEnv())
           },
         },
         {
-          title: 'Starting EZGames...',
+          title: 'Starting EZGames... (This will take a few minutes)',
           enabled: ctx => Boolean(ctx.isConfigSuccessful),
           task: async ctx => {
             await dockerComposeUp(EZG_APP_PATH, getAppEnv())
-            await cli.wait(30000)
+            // TODO: Maybe increase the retry limit instead
+            await cli.wait(120000)
             await waitForHealthyApp()
-            // await dockerComposeExec('php', 'php artisan key:generate', EZG_APP_PATH, getAppEnv())
+            await dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv())
             ctx.isStartUpSuccessful = true
           },
         },
