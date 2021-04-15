@@ -135,15 +135,16 @@ export default class InstallIndex extends Command {
             ], {concurrent: false}),
         },
         {
-          title: 'Building EZGames... (This will take a few minutes)',
+          title: 'Building Infrastructure... (This will take a few minutes)',
           enabled: ctx => Boolean(ctx.isConfigSuccessful),
-          task: async () => {
+          task: async ctx => {
             await dockerComposeBuild(EZG_APP_PATH, getAppEnv())
+            ctx.isBuildSuccessful = true
           },
         },
         {
           title: 'Starting EZGames... (This will take a few minutes)',
-          enabled: ctx => Boolean(ctx.isConfigSuccessful),
+          enabled: ctx => Boolean(ctx.isBuildSuccessful),
           task: async ctx => {
             await dockerComposeUp(EZG_APP_PATH, getAppEnv())
             // TODO: Maybe increase the retry limit instead
