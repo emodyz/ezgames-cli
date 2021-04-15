@@ -149,7 +149,7 @@ export default class InstallIndex extends Command {
           task: async ctx => {
             await dockerComposeUp(EZG_APP_PATH, getAppEnv())
             // TODO: Maybe increase the retry limit instead
-            await cli.wait(120000)
+            await cli.wait(180000)
             await waitForHealthyApp()
             await BuildFront.build()
             ctx.isStartUpSuccessful = true

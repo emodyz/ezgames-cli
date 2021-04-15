@@ -14,7 +14,7 @@ export default class BuildFront extends Command {
     await BuildFront.build(true)
   }
 
-  static async build(stdio = false) {
-    return dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv(), stdio)
+  static async build(stdio = false, tty = true) {
+    return dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv(), stdio, tty)
   }
 }
