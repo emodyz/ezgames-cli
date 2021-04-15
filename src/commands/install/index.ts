@@ -20,6 +20,7 @@ import {getAppEnv, saveEnv} from '../../core/env'
 import {dockerComposeBuild} from '../../core/docker/compose-build'
 import {waitForHealthyApp} from '../../core/api/status'
 import {dockerComposeExec} from '../../core/docker/compose-exec'
+import BuildFront from '../build/front'
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -150,7 +151,7 @@ export default class InstallIndex extends Command {
             // TODO: Maybe increase the retry limit instead
             await cli.wait(120000)
             await waitForHealthyApp()
-            await dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv())
+            await BuildFront.build()
             ctx.isStartUpSuccessful = true
           },
         },

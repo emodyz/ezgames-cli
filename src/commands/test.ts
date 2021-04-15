@@ -11,6 +11,6 @@ export default class Test extends Command {
   }
 
   async run() {
-    await dockerComposeExec('php', 'php artisan migrate:refresh --seed', EZG_APP_PATH, getAppEnv(), true)
+    await dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv(), false)
   }
 }

@@ -1,4 +1,7 @@
 import {Command, flags} from '@oclif/command'
+import {dockerComposeExec} from '../../core/docker/compose-exec'
+import {EZG_APP_PATH} from '../../core/paths'
+import {getAppEnv} from '../../core/env'
 
 export default class AppExec extends Command {
   static description = 'describe the command here'
@@ -7,21 +10,24 @@ export default class AppExec extends Command {
 
   static flags = {
     help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
   }
 
-  static args = [{name: 'file'}]
+  static args = [
+    {
+      name: 'target',
+      description: 'The name of the docker-compose service inside which the command is to be executed.',
+      required: true,
+    },
+    {
+      name: 'command',
+      description: 'The the desired command to be executed.',
+      required: true,
+    },
+  ]
 
   async run() {
-    const {args, flags} = this.parse(AppExec)
+    const {args} = this.parse(AppExec)
 
-    const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /Users/wirk/Documents/Work/Emodyz/ezgames-cli/src/commands/app/exec.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
-    }
+    await dockerComposeExec(args.target, args.command, EZG_APP_PATH, getAppEnv(), true)
   }
 }
