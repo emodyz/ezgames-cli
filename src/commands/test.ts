@@ -25,7 +25,7 @@ export default class Test extends Command {
           options: {persistentOutput: true},
           task: async (ctx, task): Promise<any> => {
             const answers = await createUserForm('owner', task)
-            await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`, true)
+            await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`, false, true)
           },
         },
       ],

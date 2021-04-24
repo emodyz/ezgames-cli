@@ -102,7 +102,7 @@ export default class InstallIndex extends Command {
               },
             ]),
         },
-        // TODO: PUT EVERYTHING UNDER EZGAMES INSTALLER
+        // TODO: MAYBE PUT EVERYTHING UNDER EZGAMES INSTALLER ???
         {
           title: 'EZGames Installer',
           enabled: (): boolean => hasDeps,
@@ -168,7 +168,7 @@ export default class InstallIndex extends Command {
           options: {persistentOutput: true},
           task: async (ctx, task) => {
             const answers = await createUserForm('owner', task)
-            await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`)
+            await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`, false, true)
             ctx.isInstallSuccessful = true
           },
         },
@@ -177,8 +177,12 @@ export default class InstallIndex extends Command {
     )
 
     await tasks.run()
+
     this.log(' ')
+
     this.log(chalk.cyan`{green ${checkMark}} {cyan.bold EZGames} {green ${requestedReleaseTag}} is now {green.bold available} at {cyan.bold.underline ${getAppEnv().APP_URL}}`)
+
+    // TODO: Add notifications. see: https://oclif.io/docs/notifications
   }
 
   async chooseVersion(task: TaskWrapper<Ctx, any>): Promise<string> {
