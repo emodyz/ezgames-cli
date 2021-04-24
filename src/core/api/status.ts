@@ -28,7 +28,7 @@ export async function waitForHealthyApp() {
     raxConfig: {
       retry: 256,
       noResponseRetries: 256,
-      retryDelay: 2000,
+      retryDelay: 5000,
       backoffType: 'static',
     },
   })

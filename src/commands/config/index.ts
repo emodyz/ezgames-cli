@@ -17,7 +17,7 @@ export async function configureAppForm(task?: TaskWrapper<Ctx, any>) {
         {name: 'domain', message: 'Domain Name (Recommended) or IPv4'},
       ],
       validate: (input: any) => {
-        return validator.isAlpha(input.name) && (validator.isFQDN(input.domain) || isIPv4(input.domain)) && validator.isEmail(input.wmEmail)
+        return validator.isAlphanumeric(input.name) && (validator.isFQDN(input.domain) || isIPv4(input.domain)) && validator.isEmail(input.wmEmail)
       },
     }
 
@@ -28,7 +28,7 @@ export async function configureAppForm(task?: TaskWrapper<Ctx, any>) {
       message: 'Community Name',
       required: true,
       validate: (input: string) => {
-        return validator.isAlpha(input)
+        return validator.isAlphanumeric(input)
       },
     },
     {

@@ -28,7 +28,8 @@ export function saveEnv(answers: { name: string; domain: string; wmEmail: string
     delete env.LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT
     delete env.LARAVEL_WEBSOCKETS_SSL_LOCAL_PK
     delete env.LARAVEL_WEBSOCKETS_SSL_PASSPHRASE
-    delete env.LARAVEL_WEBSOCKETS_VERIFY_PEER
+    delete env.LARAVEL_WEBSOCKETS_CA_FILE
+    env.LARAVEL_WEBSOCKETS_VERIFY_PEER = false
   }
 
   env.MAIL_FROM_ADDRESS = `"${answers.wmEmail}"`

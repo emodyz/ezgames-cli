@@ -15,12 +15,13 @@ import chalk from 'chalk'
 import fs from 'fs-extra'
 import {configureAppForm} from '../config'
 import {tick as checkMark} from 'figures'
-import {dockerComposeLog, dockerComposeUp} from '../../core/docker/compose-up'
+import {dockerComposeUp} from '../../core/docker/compose-up'
 import {getAppEnv, saveEnv} from '../../core/env'
 import {dockerComposeBuild} from '../../core/docker/compose-build'
 import {waitForHealthyApp} from '../../core/api/status'
-import {dockerComposeExec} from '../../core/docker/compose-exec'
 import BuildFront from '../build/front'
+import {createUserForm} from '../create/user'
+import {phpArtisan} from '../../core/docker/php/artisan'
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -101,6 +102,7 @@ export default class InstallIndex extends Command {
               },
             ]),
         },
+        // TODO: PUT EVERYTHING UNDER EZGAMES INSTALLER
         {
           title: 'EZGames Installer',
           enabled: (): boolean => hasDeps,
@@ -115,7 +117,7 @@ export default class InstallIndex extends Command {
                 },
               },
               {
-                title: 'Downloading EZGames ...',
+                title: 'Downloading EZGames...',
                 enabled: (): boolean => Boolean(requestedReleaseTag),
                 task: async (_, task) => {
                   task.title = `Downloading EZGames (${requestedReleaseTag})...`
@@ -123,11 +125,9 @@ export default class InstallIndex extends Command {
                 },
               },
               {
-                title: 'Configuring EZGames ...',
+                title: 'Configuring EZGames...',
                 enabled: (): boolean => Boolean(requestedReleaseTag),
                 task: async (_, task: any) => {
-                  task.title = `Configuring EZGames (${requestedReleaseTag})...`
-
                   saveEnv(await configureAppForm(task))
 
                   ctx.isConfigSuccessful = true
@@ -148,18 +148,27 @@ export default class InstallIndex extends Command {
           enabled: ctx => Boolean(ctx.isBuildSuccessful),
           task: async ctx => {
             await dockerComposeUp(EZG_APP_PATH, getAppEnv())
-            // TODO: Maybe increase the retry limit instead
             await cli.wait(180000)
             await waitForHealthyApp()
-            await BuildFront.build()
             ctx.isStartUpSuccessful = true
           },
         },
         {
-          title: 'Create your administrative account',
+          title: 'Building FrontEnd... (This will take a few minutes)',
           enabled: ctx => Boolean(ctx.isStartUpSuccessful),
           task: async ctx => {
-            await cli.wait(3000)
+            // TODO: Wait for https://github.com/cenk1cenk2/listr2/issues/368 ???
+            await BuildFront.build(false)
+            ctx.isFrontEndBuildSuccessful = true
+          },
+        },
+        {
+          title: 'Create your account (Admin)',
+          enabled: ctx => Boolean(ctx.isFrontEndBuildSuccessful),
+          options: {persistentOutput: true},
+          task: async (ctx, task) => {
+            const answers = await createUserForm('owner', task)
+            await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`)
             ctx.isInstallSuccessful = true
           },
         },
