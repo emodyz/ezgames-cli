@@ -22,6 +22,7 @@ import {waitForHealthyApp} from '../../core/api/status'
 import BuildFront from '../build/front'
 import {createUserForm} from '../create/user'
 import {phpArtisan} from '../../core/docker/php/artisan'
+import validator from 'validator'
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -128,8 +129,9 @@ export default class InstallIndex extends Command {
                 title: 'Configuring EZGames...',
                 enabled: (): boolean => Boolean(requestedReleaseTag),
                 task: async (_, task: any) => {
-                  saveEnv(await configureAppForm(task))
-
+                  const answers = await configureAppForm(task)
+                  saveEnv(answers)
+                  ctx.hostIsFQDN = validator.isFQDN(answers.domain)
                   ctx.isConfigSuccessful = true
                 },
               },
@@ -163,8 +165,16 @@ export default class InstallIndex extends Command {
           },
         },
         {
+          title: 'Generating TLS Certificates... (This may take a few minutes)',
+          enabled: ctx => Boolean(ctx.hostIsFQDN) && Boolean(ctx.isFrontEndBuildSuccessful),
+          task: async ctx => {
+            await cli.wait(3000)
+            ctx.isCertBotGenSuccessful = true
+          },
+        },
+        {
           title: 'Create your account (Admin)',
-          enabled: ctx => Boolean(ctx.isFrontEndBuildSuccessful),
+          enabled: ctx => Boolean(ctx.isFrontEndBuildSuccessful) || Boolean(ctx.isCertBotGenSuccessful),
           options: {persistentOutput: true},
           task: async (ctx, task) => {
             const answers = await createUserForm('owner', task)
