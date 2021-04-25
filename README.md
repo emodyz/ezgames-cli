@@ -19,7 +19,7 @@ $ npm install -g ezgames-cli
 $ ezgames COMMAND
 running command...
 $ ezgames (-v|--version|version)
-ezgames-cli/0.0.0 darwin-x64 node-v15.11.0
+ezgames-cli/0.0.0 darwin-x64 node-v16.0.0
 $ ezgames --help [COMMAND]
 USAGE
   $ ezgames COMMAND
@@ -28,29 +28,35 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`ezgames app:exec [FILE]`](#ezgames-appexec-file)
+* [`ezgames app:exec TARGET COMMAND`](#ezgames-appexec-target-command)
 * [`ezgames app:start`](#ezgames-appstart)
 * [`ezgames app:status`](#ezgames-appstatus)
 * [`ezgames autocomplete [SHELL]`](#ezgames-autocomplete-shell)
-* [`ezgames build:front [FILE]`](#ezgames-buildfront-file)
+* [`ezgames build:front`](#ezgames-buildfront)
 * [`ezgames config`](#ezgames-config)
 * [`ezgames create:user`](#ezgames-createuser)
 * [`ezgames help [COMMAND]`](#ezgames-help-command)
 * [`ezgames install`](#ezgames-install)
+* [`ezgames ssl:sign [FILE]`](#ezgames-sslsign-file)
 * [`ezgames test`](#ezgames-test)
 
-## `ezgames app:exec [FILE]`
+## `ezgames app:exec TARGET COMMAND`
 
 describe the command here
 
 ```
 USAGE
-  $ ezgames app:exec [FILE]
+  $ ezgames app:exec TARGET COMMAND
+
+ARGUMENTS
+  TARGET   The name of the docker-compose service inside which the command is to be executed.
+  COMMAND  The the desired command to be executed.
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
+
+ALIASES
+  $ ezgames exec
 ```
 
 _See code: [src/commands/app/exec.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/exec.ts)_
@@ -112,18 +118,16 @@ EXAMPLES
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.3.0/src/commands/autocomplete/index.ts)_
 
-## `ezgames build:front [FILE]`
+## `ezgames build:front`
 
-describe the command here
+(Re)Build EZGames's FontEnd Application
 
 ```
 USAGE
-  $ ezgames build:front [FILE]
+  $ ezgames build:front
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
 _See code: [src/commands/build/front.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/build/front.ts)_
@@ -194,6 +198,22 @@ OPTIONS
 ```
 
 _See code: [src/commands/install/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/install/index.ts)_
+
+## `ezgames ssl:sign [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ ezgames ssl:sign [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/ssl/sign.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/ssl/sign.ts)_
 
 ## `ezgames test`
 

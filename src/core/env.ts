@@ -24,12 +24,17 @@ export function saveEnv(answers: { name: string; domain: string; wmEmail: string
   env.DB_USERNAME = 'ezgames'
   env.DB_PASSWORD = randomBytes(20).toString('hex')
 
+  // READ BY NGINX CONF
+  env.EZG_HOST = answers.domain
+
   if (!isDomain) {
     delete env.LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT
     delete env.LARAVEL_WEBSOCKETS_SSL_LOCAL_PK
     delete env.LARAVEL_WEBSOCKETS_SSL_PASSPHRASE
     delete env.LARAVEL_WEBSOCKETS_CA_FILE
     env.LARAVEL_WEBSOCKETS_VERIFY_PEER = false
+    // READ BY NGINX CONF
+    env.EZG_HOST = '_'
   }
 
   env.MAIL_FROM_ADDRESS = `"${answers.wmEmail}"`
