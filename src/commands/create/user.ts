@@ -16,7 +16,7 @@ export async function createUserForm(role = 'default', task?: TaskWrapper<Ctx, a
       {name: 'role', message: 'User\'s Role', initial: role, disabled: Boolean(role)},
     ],
     validate: (input: any) => {
-      return validator.isAlphanumeric(input.username) && validator.isEmail(input.email)
+      return validator.isAscii(input.username) && validator.isEmail(input.email)
     },
   }
 
