@@ -43,7 +43,7 @@ export default class CreateUser extends Command {
     const {flags} = this.parse(CreateUser)
     let answers: any = flags
     if (!(flags.username && flags.email && flags.password && flags.role)) {
-      answers = await createUserForm()
+      answers = await createUserForm('')
     }
 
     await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`)
