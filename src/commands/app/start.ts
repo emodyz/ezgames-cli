@@ -4,7 +4,7 @@ import {EZG_APP_PATH} from '../../core/paths'
 import {getAppEnv} from '../../core/env'
 
 export default class AppStart extends Command {
-  static description = 'Starts the EZGames container'
+  static description = 'Starts EZGames\'s containers'
 
   static aliases = ['start']
 
