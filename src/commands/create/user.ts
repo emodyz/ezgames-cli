@@ -46,6 +46,8 @@ export default class CreateUser extends Command {
       answers = await createUserForm('')
     }
 
-    await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`)
+    console.log(answers)
+
+    // await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`, true, true)
   }
 }
