@@ -9,10 +9,11 @@ export async function createUserForm(role = 'default', task?: TaskWrapper<Ctx, a
   const form = {
     type: 'form',
     message: 'Create a new user:',
+    name: 'user',
     choices: [
-      {name: 'username', message: 'User\'s name', required: true},
-      {name: 'email', message: 'User\'s email address', required: true},
-      {name: 'password', message: 'User\'s password', required: true},
+      {name: 'username', message: 'User\'s name', required: false},
+      {name: 'email', message: 'User\'s email address', required: false},
+      {name: 'password', message: 'User\'s password', required: false},
       {name: 'role', message: 'User\'s Role', initial: role, disabled: Boolean(role)},
     ],
     validate: (input: any) => {
@@ -21,11 +22,8 @@ export async function createUserForm(role = 'default', task?: TaskWrapper<Ctx, a
   }
 
   const answers = task ? await task.prompt(form) : await prompt(form)
-  // Forces the code to take precedence over the user's input
-  if (role) {
-    answers.role = role
-  }
-  return answers
+
+  return task ? answers : answers.user
 }
 
 export default class CreateUser extends Command {
@@ -46,8 +44,6 @@ export default class CreateUser extends Command {
       answers = await createUserForm('')
     }
 
-    console.log(answers)
-
-    // await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`, true, true)
+    await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`, true, true)
   }
 }

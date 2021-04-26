@@ -5,6 +5,7 @@ import {dockerComposeExec} from '../core/docker/compose-exec'
 import {Listr, ListrContext as Ctx} from 'listr2'
 import {createUserForm} from './create/user'
 import {phpArtisan} from '../core/docker/php/artisan'
+import {cli} from 'cli-ux'
 // import execa from 'execa'
 // import * as readline from 'readline'
 
@@ -25,7 +26,8 @@ export default class Test extends Command {
           options: {persistentOutput: true},
           task: async (ctx, task): Promise<any> => {
             const answers = await createUserForm('owner', task)
-            await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`, false, true)
+            task.output = (JSON.stringify(answers))
+            await cli.wait(8000)
           },
         },
       ],
