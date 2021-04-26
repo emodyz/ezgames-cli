@@ -4,7 +4,7 @@ import {getAppEnv} from '../env'
 import * as rax from 'retry-axios'
 
 export async function getAppHealth() {
-  const {data: health} = await axios.get(`${getAppEnv().APP_URL}/health`, {
+  const {data: health} = await axios.get(`http://${getAppEnv().EZG_HOST}/health`, {
   // const {data: health} = await axios.get('http://localhost/health', {
     httpsAgent: new https.Agent(
       {
@@ -24,7 +24,7 @@ export async function getAppHealth() {
 
 export async function waitForHealthyApp() {
   rax.attach(axios)
-  const {data: health} = await axios.get(`${getAppEnv().APP_URL}/health`, {
+  const {data: health} = await axios.get(`http://${getAppEnv().EZG_HOST}/health`, {
   // const {data: health} = await axios.get('http://localhost/health', {
     raxConfig: {
       retry: 256,
