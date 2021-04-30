@@ -54,7 +54,7 @@ export function saveConfigToEnv(answers: { name: string; domain: string; wmEmail
 }
 
 export function saveKeyToEnv(key: string, value: string | number) {
-  const env = getAppEnv(true)
+  const env = getAppEnv()
 
   env[key] = value
 
