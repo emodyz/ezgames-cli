@@ -1,7 +1,5 @@
 import {Command, flags} from '@oclif/command'
 import {dockerComposeExec} from '../../core/docker/compose-exec'
-import {EZG_APP_PATH} from '../../core/paths'
-import {getAppEnv} from '../../core/env'
 
 export default class AppExec extends Command {
   static description = 'describe the command here'
@@ -28,6 +26,6 @@ export default class AppExec extends Command {
   async run() {
     const {args} = this.parse(AppExec)
 
-    await dockerComposeExec(args.target, args.command, EZG_APP_PATH, getAppEnv(), true)
+    await dockerComposeExec(args.target, args.command, true, {stdio: 'inherit'})
   }
 }

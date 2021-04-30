@@ -16,13 +16,14 @@ import fs from 'fs-extra'
 import {configureAppForm} from '../config'
 import {tick as checkMark} from 'figures'
 import {dockerComposeUp} from '../../core/docker/compose-up'
-import {getAppEnv, saveEnv} from '../../core/env'
+import {getAppEnv, saveConfigToEnv} from '../../core/env'
 import {dockerComposeBuild} from '../../core/docker/compose-build'
 import {waitForHealthyApp} from '../../core/api/status'
 import BuildFront from '../build/front'
 import {createUserForm} from '../create/user'
 import {phpArtisan} from '../../core/docker/php/artisan'
 import validator from 'validator'
+import {dockerComposeExec} from '../../core/docker/compose-exec'
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -130,7 +131,7 @@ export default class InstallIndex extends Command {
                 enabled: (): boolean => Boolean(requestedReleaseTag),
                 task: async (_, task: any) => {
                   const answers = await configureAppForm(task)
-                  saveEnv(answers)
+                  saveConfigToEnv(answers)
                   ctx.hostIsFQDN = validator.isFQDN(answers.domain)
                   ctx.isConfigSuccessful = true
                 },
@@ -138,10 +139,10 @@ export default class InstallIndex extends Command {
             ], {concurrent: false}),
         },
         {
-          title: 'Building Infrastructure... (This will take a few minutes)',
+          title: 'Building Infrastructure... (This may take a few minutes)',
           enabled: ctx => Boolean(ctx.isConfigSuccessful),
           task: async ctx => {
-            await dockerComposeBuild(EZG_APP_PATH, getAppEnv())
+            await dockerComposeBuild()
             ctx.isBuildSuccessful = true
           },
         },
@@ -149,7 +150,7 @@ export default class InstallIndex extends Command {
           title: 'Starting EZGames... (This will take a few minutes)',
           enabled: ctx => Boolean(ctx.isBuildSuccessful),
           task: async ctx => {
-            await dockerComposeUp(EZG_APP_PATH, getAppEnv())
+            await dockerComposeUp()
             await cli.wait(120000)
             await waitForHealthyApp()
             ctx.isStartUpSuccessful = true
@@ -160,15 +161,16 @@ export default class InstallIndex extends Command {
           enabled: ctx => Boolean(ctx.isStartUpSuccessful),
           task: async ctx => {
             // TODO: Wait for https://github.com/cenk1cenk2/listr2/issues/368 ???
-            await BuildFront.build(false)
+            await BuildFront.build(true)
             ctx.isFrontEndBuildSuccessful = true
           },
         },
         {
-          title: 'Generating TLS Certificates... (This may take a few minutes)',
+          title: 'Generating TLS Certificates... (This might take a few moments)',
           enabled: ctx => Boolean(ctx.hostIsFQDN) && Boolean(ctx.isFrontEndBuildSuccessful),
           task: async ctx => {
-            await cli.wait(3000)
+            const env = getAppEnv()
+            await dockerComposeExec('ezgames', `certbot --nginx -d ${env.EZG_HOST} -m ${env.EZG_WM_EMAIL} --agree-tos --no-eff-email --keep-until-expiring`, true, {stdio: 'inherit'})
             ctx.isCertBotGenSuccessful = true
           },
         },
@@ -178,7 +180,7 @@ export default class InstallIndex extends Command {
           options: {persistentOutput: true},
           task: async (ctx, task) => {
             const answers = await createUserForm('owner', task)
-            await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`, false, true)
+            await phpArtisan(`create:user ${answers.username} ${answers.email} ${answers.password} ${answers.role}`, true)
             ctx.isInstallSuccessful = true
           },
         },

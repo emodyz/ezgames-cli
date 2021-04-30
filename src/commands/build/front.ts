@@ -1,7 +1,6 @@
 import {Command, flags} from '@oclif/command'
 import {dockerComposeExec} from '../../core/docker/compose-exec'
-import {EZG_APP_PATH} from '../../core/paths'
-import {getAppEnv} from '../../core/env'
+import {stdIo} from '../../types/execa'
 
 export default class BuildFront extends Command {
   static description = '(Re)Build EZGames\'s FontEnd Application'
@@ -11,10 +10,10 @@ export default class BuildFront extends Command {
   }
 
   async run() {
-    await BuildFront.build(true)
+    await BuildFront.build(true, 'inherit')
   }
 
-  static async build(stdio = false, tty = true) {
-    return dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv(), stdio, tty)
+  static async build(tty = true, stdio: stdIo = 'pipe',) {
+    return dockerComposeExec('php', 'yarn run production', tty, {stdio: stdio})
   }
 }

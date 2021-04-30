@@ -4,7 +4,7 @@ import validator from 'validator'
 import {TaskWrapper} from 'listr2/dist/lib/task-wrapper'
 import {ListrContext as Ctx} from 'listr2/dist/interfaces/listr.interface'
 import {isIPv4} from 'net'
-import {saveEnv} from '../../core/env'
+import {saveConfigToEnv} from '../../core/env'
 
 export async function configureAppForm(task?: TaskWrapper<Ctx, any>) {
   const form =
@@ -67,8 +67,8 @@ export default class ConfigIndex extends Command {
   async run() {
     const {flags} = this.parse(ConfigIndex)
     if (flags.domain && flags.name && flags.email) {
-      return saveEnv({name: flags.name, domain: flags.domain, wmEmail: flags.email})
+      return saveConfigToEnv({name: flags.name, domain: flags.domain, wmEmail: flags.email})
     }
-    saveEnv(await configureAppForm())
+    saveConfigToEnv(await configureAppForm())
   }
 }

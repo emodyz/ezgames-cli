@@ -1,7 +1,6 @@
 import {dockerComposeExec} from '../compose-exec'
-import {EZG_APP_PATH} from '../../paths'
-import {getAppEnv} from '../../env'
+import {stdIo} from '../../../types/execa'
 
-export function phpArtisan(cmd: string, stdio = false, tty = false) {
-  return dockerComposeExec('ezgames', `php artisan ${cmd}`, EZG_APP_PATH, getAppEnv(), stdio, tty)
+export function requestTLS(cmd: string, tty = false, stdio: stdIo = 'pipe',) {
+  return dockerComposeExec('ezgames', `php artisan ${cmd}`, tty, {stdio: stdio})
 }

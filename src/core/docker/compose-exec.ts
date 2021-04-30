@@ -1,5 +1,8 @@
 import execa, {ExecaChildProcess} from 'execa'
+import {execaDefaultOptions} from '../defaults'
 
-export function dockerComposeExec(target: string, cmd: string, cwd = process.cwd(), env = process.env, stdio = false, tty = false): ExecaChildProcess  {
-  return execa.command(`docker-compose exec ${tty ? '-T' : ''}  ${target} ${cmd}`, {cwd: cwd, env: env, windowsHide: true, shell: true, stdio: stdio ? 'inherit' : 'pipe'})
+export function dockerComposeExec(target: string, cmd: string, tty = false, execaOptions?: execa.Options): ExecaChildProcess  {
+  execaOptions = Object.assign({}, execaDefaultOptions, execaOptions)
+
+  return execa.command(`docker-compose exec ${tty ? '-T' : ''}  ${target} "${cmd}"`, execaOptions)
 }

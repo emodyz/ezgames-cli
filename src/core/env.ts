@@ -8,7 +8,7 @@ export function getAppEnv(example = false): any {
   return parseEnv(readFileSync(example ? EZG_APP_ENV_EXAMPLE_PATH : EZG_APP_ENV_PATH, 'utf-8'))
 }
 
-export function saveEnv(answers: { name: string; domain: string; wmEmail: string}) {
+export function saveConfigToEnv(answers: { name: string; domain: string; wmEmail: string}) {
   const env = getAppEnv(true)
 
   const isDomain = validator.isFQDN(answers.domain)
@@ -24,17 +24,21 @@ export function saveEnv(answers: { name: string; domain: string; wmEmail: string
   env.DB_USERNAME = 'ezgames'
   env.DB_PASSWORD = randomBytes(20).toString('hex')
 
-  // READ BY NGINX CONF
   env.EZG_HOST = answers.domain
+  env.EZG_WM_EMAIL = answers.wmEmail
+
+  // READ BY NGINX CONF
+  env.EZG_NGINX_HOST = answers.domain
+
+  env.LARAVEL_WEBSOCKETS_VERIFY_PEER = false
 
   if (!isDomain) {
     delete env.LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT
     delete env.LARAVEL_WEBSOCKETS_SSL_LOCAL_PK
     delete env.LARAVEL_WEBSOCKETS_SSL_PASSPHRASE
     delete env.LARAVEL_WEBSOCKETS_CA_FILE
-    env.LARAVEL_WEBSOCKETS_VERIFY_PEER = false
     // READ BY NGINX CONF
-    env.EZG_HOST = '_'
+    env.EZG_NGINX_HOST = '_'
   }
 
   env.MAIL_FROM_ADDRESS = `"${answers.wmEmail}"`
@@ -44,6 +48,14 @@ export function saveEnv(answers: { name: string; domain: string; wmEmail: string
    * ⚠️ This is necessary to prevent volume collisions between installs
    */
   env.COMPOSE_PROJECT_NAME = `ezgames_${Date.now()}`
+
+  writeFileSync(EZG_APP_ENV_PATH, stringifyEnv(env))
+}
+
+export function saveKeyToEnv(key: string, value: string | number) {
+  const env = getAppEnv(true)
+
+  env[key] = value
 
   writeFileSync(EZG_APP_ENV_PATH, stringifyEnv(env))
 }

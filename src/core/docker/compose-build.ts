@@ -1,6 +1,8 @@
 import execa, {ExecaChildProcess} from 'execa'
+import {execaDefaultOptions} from '../defaults'
 
-// TODO: ReEnable Cashing ???
-export function dockerComposeBuild(cwd = process.cwd(), env = process.env, stdio = false): ExecaChildProcess {
-  return execa('docker-compose', ['build'/* , '--no-cache' */], {cwd: cwd, env: env, windowsHide: true, shell: true, stdio: stdio ? 'inherit' : 'pipe'})
+export function dockerComposeBuild(execaOptions?: execa.Options): ExecaChildProcess {
+  execaOptions = Object.assign({}, execaDefaultOptions, execaOptions)
+
+  return execa('docker-compose', ['build'/* , '--no-cache' */], execaOptions)
 }

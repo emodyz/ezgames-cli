@@ -1,9 +1,13 @@
 import execa, {ExecaChildProcess} from 'execa'
+import {execaDefaultOptions} from '../defaults'
 
-export function dockerComposeUp(cwd = process.cwd(), env = process.env, stdio = false): ExecaChildProcess {
-  return execa('docker-compose', ['up', '-d'], {cwd: cwd, env: env, windowsHide: true, shell: true, stdio: stdio ? 'inherit' : 'pipe'})
+export function dockerComposeUp(execaOptions?: execa.Options): ExecaChildProcess {
+  execaOptions = Object.assign({}, execaDefaultOptions, execaOptions)
+
+  return execa('docker-compose', ['up', '-d'], execaOptions)
 }
 
-export function dockerComposeLog(cwd = process.cwd(), env = process.env, stdio = false): ExecaChildProcess  {
-  return execa('docker-compose', ['logs', '-f', '-t'], {cwd: cwd, env: env, windowsHide: true, shell: true, stdio: stdio ? 'inherit' : 'pipe'})
+export function dockerComposeLog(execaOptions?: execa.Options): ExecaChildProcess  {
+  execaOptions = Object.assign({}, execaDefaultOptions, execaOptions)
+  return execa('docker-compose', ['logs', '-f', '-t'], execaOptions)
 }
