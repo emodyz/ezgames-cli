@@ -26,6 +26,7 @@ export function saveConfigToEnv(answers: { name: string; domain: string; wmEmail
 
   env.EZG_HOST = answers.domain
   env.EZG_WM_EMAIL = answers.wmEmail
+  env.EZG_NGINX_SHOULD_PUBLISH_TEMPLATES = '.template'
 
   // READ BY NGINX CONF
   env.EZG_NGINX_HOST = answers.domain
