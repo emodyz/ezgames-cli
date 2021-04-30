@@ -16,7 +16,7 @@ import fs from 'fs-extra'
 import {configureAppForm} from '../config'
 import {tick as checkMark} from 'figures'
 import {dockerComposeUp} from '../../core/docker/compose-up'
-import {getAppEnv, saveConfigToEnv} from '../../core/env'
+import {getAppEnv, saveConfigToEnv, saveKeyToEnv} from '../../core/env'
 import {dockerComposeBuild} from '../../core/docker/compose-build'
 import {waitForHealthyApp} from '../../core/api/status'
 import BuildFront from '../build/front'
@@ -170,6 +170,7 @@ export default class InstallIndex extends Command {
           enabled: ctx => Boolean(ctx.hostIsFQDN) && Boolean(ctx.isFrontEndBuildSuccessful),
           task: async ctx => {
             await requestTLS(true, 'inherit')
+            saveKeyToEnv('EZG_NGINX_SHOULD_PUBLISH_TEMPLATES', '.notemplate')
             ctx.isCertBotGenSuccessful = true
           },
         },
