@@ -23,7 +23,7 @@ import BuildFront from '../build/front'
 import {createUserForm} from '../create/user'
 import {phpArtisan} from '../../core/docker/php/artisan'
 import validator from 'validator'
-import {dockerComposeExec} from '../../core/docker/compose-exec'
+import {requestTLS} from '../../core/docker/nginx/certbot'
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -169,8 +169,7 @@ export default class InstallIndex extends Command {
           title: 'Generating TLS Certificates... (This might take a few moments)',
           enabled: ctx => Boolean(ctx.hostIsFQDN) && Boolean(ctx.isFrontEndBuildSuccessful),
           task: async ctx => {
-            const env = getAppEnv()
-            await dockerComposeExec('ezgames', `certbot --nginx -d ${env.EZG_HOST} -m ${env.EZG_WM_EMAIL} --agree-tos --no-eff-email --keep-until-expiring`, true, {stdio: 'inherit'})
+            await requestTLS(true, 'inherit')
             ctx.isCertBotGenSuccessful = true
           },
         },
