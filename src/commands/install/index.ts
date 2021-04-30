@@ -175,9 +175,9 @@ export default class InstallIndex extends Command {
               WebSockets
              ***********/
             // eslint-disable-next-line no-template-curly-in-string
-            saveKeyToEnv('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', '"/etc/letsencrypt/live/${DB_DATABASE}/fullchain.pem"')
+            saveKeyToEnv('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', '"/etc/letsencrypt/live/${EZG_HOST}/fullchain.pem"')
             // eslint-disable-next-line no-template-curly-in-string
-            saveKeyToEnv('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', '"/etc/letsencrypt/live/${DB_DATABASE}/privkey.pem"')
+            saveKeyToEnv('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', '"/etc/letsencrypt/live/${EZG_HOST}/privkey.pem"')
             ctx.isCertBotGenSuccessful = true
           },
         },
