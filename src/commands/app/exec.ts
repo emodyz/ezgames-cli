@@ -26,6 +26,6 @@ export default class AppExec extends Command {
   async run() {
     const {args} = this.parse(AppExec)
 
-    await dockerComposeExec(args.target, args.command, true, {stdio: 'inherit'})
+    await dockerComposeExec(args.target, args.command, false, {stdio: 'inherit'})
   }
 }

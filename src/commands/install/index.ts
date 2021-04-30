@@ -171,6 +171,13 @@ export default class InstallIndex extends Command {
           task: async ctx => {
             await requestTLS(true, 'inherit')
             saveKeyToEnv('EZG_NGINX_SHOULD_PUBLISH_TEMPLATES', '.notemplate')
+            /************
+              WebSockets
+             ***********/
+            // eslint-disable-next-line no-template-curly-in-string
+            saveKeyToEnv('LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT', '"/etc/letsencrypt/live/${DB_DATABASE}/fullchain.pem"')
+            // eslint-disable-next-line no-template-curly-in-string
+            saveKeyToEnv('LARAVEL_WEBSOCKETS_SSL_LOCAL_PK', '"/etc/letsencrypt/live/${DB_DATABASE}/privkey.pem"')
             ctx.isCertBotGenSuccessful = true
           },
         },
