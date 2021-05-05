@@ -29,8 +29,10 @@ USAGE
 # Commands
 <!-- commands -->
 * [`ezgames app:exec TARGET COMMAND`](#ezgames-appexec-target-command)
+* [`ezgames app:restart [FILE]`](#ezgames-apprestart-file)
 * [`ezgames app:start`](#ezgames-appstart)
 * [`ezgames app:status`](#ezgames-appstatus)
+* [`ezgames app:stop`](#ezgames-appstop)
 * [`ezgames autocomplete [SHELL]`](#ezgames-autocomplete-shell)
 * [`ezgames build:front`](#ezgames-buildfront)
 * [`ezgames config`](#ezgames-config)
@@ -61,9 +63,25 @@ ALIASES
 
 _See code: [src/commands/app/exec.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/exec.ts)_
 
+## `ezgames app:restart [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ ezgames app:restart [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/app/restart.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/restart.ts)_
+
 ## `ezgames app:start`
 
-Starts the EZGames container
+Starts EZGames's containers
 
 ```
 USAGE
@@ -94,6 +112,23 @@ ALIASES
 ```
 
 _See code: [src/commands/app/status.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/status.ts)_
+
+## `ezgames app:stop`
+
+Stops EZGames's containers
+
+```
+USAGE
+  $ ezgames app:stop
+
+OPTIONS
+  -h, --help  show CLI help
+
+ALIASES
+  $ ezgames stop
+```
+
+_See code: [src/commands/app/stop.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/stop.ts)_
 
 ## `ezgames autocomplete [SHELL]`
 

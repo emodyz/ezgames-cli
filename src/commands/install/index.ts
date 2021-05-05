@@ -169,6 +169,7 @@ export default class InstallIndex extends Command {
           title: 'Generating TLS Certificates... (This might take a few moments)',
           enabled: ctx => Boolean(ctx.hostIsFQDN) && Boolean(ctx.isFrontEndBuildSuccessful),
           task: async ctx => {
+            // TODO: Add cron job to auto renew tls certs
             await requestTLS(true, 'inherit')
             saveKeyToEnv('EZG_NGINX_SHOULD_PUBLISH_TEMPLATES', '.notemplate')
             /************

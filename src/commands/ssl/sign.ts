@@ -1,5 +1,6 @@
 import {Command, flags} from '@oclif/command'
 
+// TODO: Implement this command with env integrity checks
 export default class SslSign extends Command {
   static description = 'describe the command here'
 
