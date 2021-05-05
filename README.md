@@ -29,7 +29,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`ezgames app:exec TARGET COMMAND`](#ezgames-appexec-target-command)
-* [`ezgames app:restart [FILE]`](#ezgames-apprestart-file)
+* [`ezgames app:restart`](#ezgames-apprestart)
 * [`ezgames app:start`](#ezgames-appstart)
 * [`ezgames app:status`](#ezgames-appstatus)
 * [`ezgames app:stop`](#ezgames-appstop)
@@ -63,18 +63,19 @@ ALIASES
 
 _See code: [src/commands/app/exec.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/exec.ts)_
 
-## `ezgames app:restart [FILE]`
+## `ezgames app:restart`
 
-describe the command here
+Restarts EZGames's containers
 
 ```
 USAGE
-  $ ezgames app:restart [FILE]
+  $ ezgames app:restart
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
+
+ALIASES
+  $ ezgames restart
 ```
 
 _See code: [src/commands/app/restart.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/restart.ts)_
@@ -221,7 +222,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2
 
 ## `ezgames install`
 
-[35m[1mEZGames[22m[39m [36mInstaller[39m
+EZGames Installer
 
 ```
 USAGE
