@@ -24,6 +24,8 @@ export function saveConfigToEnv(answers: { name: string; domain: string; wmEmail
   env.DB_USERNAME = 'ezgames'
   env.DB_PASSWORD = randomBytes(20).toString('hex')
 
+  env.PUSHER_APP_KEY = randomBytes(20).toString('hex')
+
   env.EZG_HOST = answers.domain
   env.EZG_WM_EMAIL = answers.wmEmail
   env.EZG_NGINX_SHOULD_PUBLISH_TEMPLATES = '.template'
@@ -53,6 +55,7 @@ export function saveConfigToEnv(answers: { name: string; domain: string; wmEmail
   writeFileSync(EZG_APP_ENV_PATH, stringifyEnv(env))
 }
 
+// TODO: allow the edition a multiple key-value pairs with only two I/O ops
 export function saveKeyToEnv(key: string, value: string | number) {
   const env = getAppEnv()
 
