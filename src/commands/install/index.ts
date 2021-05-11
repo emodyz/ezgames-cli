@@ -252,12 +252,14 @@ export default class InstallIndex extends Command {
   }
 
   static async getVersions(): Promise<{ availableVersions: Array<string> | undefined; choices: Array<Record<string, string | null>> }> {
-    const latestRelease = (await GitHub.requestWithAuth('GET /repos/{owner}/{repo}/releases/latest', {
+    const gitHubApi = process.env.EZG_CLI_GITHUB_TOKEN ? GitHub.requestWithAuth : GitHub.requestAnonymously
+
+    const latestRelease = (await gitHubApi('GET /repos/{owner}/{repo}/releases/latest', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',
     })).data
 
-    InstallIndex.allReleases = collect((await GitHub.requestWithAuth('GET /repos/{owner}/{repo}/releases', {
+    InstallIndex.allReleases = collect((await gitHubApi('GET /repos/{owner}/{repo}/releases', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',
     })).data)
