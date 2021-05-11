@@ -29,6 +29,7 @@
     "moment": "^2.29.1",
     "node-notifier": "^9.0.1",
     "retry-axios": "^2.4.0",
+    "simple-git": "^2.38.1",
     "tslib": "^1",
     "validator": "^13.5.2",
     "which": "^2.0.2",

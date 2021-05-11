@@ -1,13 +1,14 @@
 import {Command, flags} from '@oclif/command'
-import {EZG_APP_PATH} from '../core/paths'
-import {getAppEnv} from '../core/env'
-import {dockerComposeExec} from '../core/docker/compose-exec'
-import {Listr, ListrContext as Ctx} from 'listr2'
-import {createUserForm} from './create/user'
-import {phpArtisan} from '../core/docker/php/artisan'
-import {cli} from 'cli-ux'
+// import {EZG_APP_PATH} from '../core/paths'
+// import {getAppEnv} from '../core/env'
+// import {dockerComposeExec} from '../core/docker/compose-exec'
+// import {Listr, ListrContext as Ctx} from 'listr2'
+// import {createUserForm} from './create/user'
+// import {phpArtisan} from '../core/docker/php/artisan'
+// import {cli} from 'cli-ux'
 // import execa from 'execa'
 // import * as readline from 'readline'
+import simpleGit, {SimpleGit, SimpleGitOptions} from 'simple-git'
 
 export default class Test extends Command {
   static description = 'Dummy Command used to test features'
@@ -17,8 +18,17 @@ export default class Test extends Command {
   }
 
   async run() {
-    // await dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv(), false, true)
+    const options: Partial<SimpleGitOptions> = {
+      baseDir: process.cwd(),
+      binary: 'git',
+      maxConcurrentProcesses: 6,
+    }
 
+    const git: SimpleGit = simpleGit(options)
+
+    console.log(await git.status())
+    // await dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv(), false, true)
+    /*
     const tasks = new Listr<Ctx>(
       [
         {
@@ -40,5 +50,6 @@ export default class Test extends Command {
     )
 
     await tasks.run()
+    */
   }
 }

@@ -33,7 +33,7 @@ USAGE
 * [`ezgames app:start`](#ezgames-appstart)
 * [`ezgames app:status`](#ezgames-appstatus)
 * [`ezgames app:stop`](#ezgames-appstop)
-* [`ezgames app:upgrade [FILE]`](#ezgames-appupgrade-file)
+* [`ezgames app:upgrade`](#ezgames-appupgrade)
 * [`ezgames autocomplete [SHELL]`](#ezgames-autocomplete-shell)
 * [`ezgames build:front`](#ezgames-buildfront)
 * [`ezgames config`](#ezgames-config)
@@ -45,7 +45,7 @@ USAGE
 
 ## `ezgames app:exec TARGET COMMAND`
 
-describe the command here
+Executes the provided command inside the targeted docker-compose service
 
 ```
 USAGE
@@ -132,18 +132,16 @@ ALIASES
 
 _See code: [src/commands/app/stop.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/stop.ts)_
 
-## `ezgames app:upgrade [FILE]`
+## `ezgames app:upgrade`
 
-describe the command here
+[35m[1mEZGames[22m[39m [36mUpdater[39m
 
 ```
 USAGE
-  $ ezgames app:upgrade [FILE]
+  $ ezgames app:upgrade
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help  show CLI help
 ```
 
 _See code: [src/commands/app/upgrade.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/upgrade.ts)_
