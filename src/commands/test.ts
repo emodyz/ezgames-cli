@@ -1,4 +1,5 @@
 import {Command, flags} from '@oclif/command'
+import {getGitInfoBasic} from '../core/git'
 // import {EZG_APP_PATH} from '../core/paths'
 // import {getAppEnv} from '../core/env'
 // import {dockerComposeExec} from '../core/docker/compose-exec'
@@ -8,7 +9,7 @@ import {Command, flags} from '@oclif/command'
 // import {cli} from 'cli-ux'
 // import execa from 'execa'
 // import * as readline from 'readline'
-import simpleGit, {SimpleGit, SimpleGitOptions} from 'simple-git'
+import semver from 'semver'
 
 export default class Test extends Command {
   static description = 'Dummy Command used to test features'
@@ -18,21 +19,8 @@ export default class Test extends Command {
   }
 
   async run() {
-    const options: Partial<SimpleGitOptions> = {
-      baseDir: process.cwd(),
-      binary: 'git',
-      maxConcurrentProcesses: 6,
-    }
-
-    const git: SimpleGit = simpleGit(options)
-
-    let currentBranch = await git.tag(['--points-at', 'HEAD'])
-    if (!currentBranch) {
-      const {current} = await git.branch()
-      currentBranch = current
-    }
-
-    console.log(currentBranch)
+    console.log(semver)
+    // console.log(await getGitInfoBasic())
     // await dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv(), false, true)
     /*
     const tasks = new Listr<Ctx>(
