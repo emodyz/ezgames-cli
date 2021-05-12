@@ -123,7 +123,7 @@ export default class InstallIndex extends Command {
                 enabled: (): boolean => Boolean(requestedReleaseTag),
                 task: async (_, task) => {
                   task.title = `Downloading EZGames (${requestedReleaseTag})...`
-                  return execa('git', ['clone', '--progress', '-b', `${requestedReleaseTag}`, '--depth', '1', 'https://github.com/emodyz/MultigamingPanel.git', `${EZG_APP_PATH}`]).stderr
+                  return execa('git', ['clone', '--progress', '-b', `${requestedReleaseTag}`, /* '--depth', '1', */ 'https://github.com/emodyz/MultigamingPanel.git', `${EZG_APP_PATH}`]).stderr
                 },
               },
               {

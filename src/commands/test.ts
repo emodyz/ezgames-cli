@@ -26,7 +26,13 @@ export default class Test extends Command {
 
     const git: SimpleGit = simpleGit(options)
 
-    console.log(await git.status())
+    let currentBranch = await git.tag(['--points-at', 'HEAD'])
+    if (!currentBranch) {
+      const {current} = await git.branch()
+      currentBranch = current
+    }
+
+    console.log(currentBranch)
     // await dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv(), false, true)
     /*
     const tasks = new Listr<Ctx>(
