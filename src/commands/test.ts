@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import {getGitInfoBasic} from '../core/git'
+import {getGitInfo} from '../core/git'
 // import {EZG_APP_PATH} from '../core/paths'
 // import {getAppEnv} from '../core/env'
 // import {dockerComposeExec} from '../core/docker/compose-exec'

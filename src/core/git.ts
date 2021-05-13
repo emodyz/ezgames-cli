@@ -6,7 +6,7 @@ export interface GitInfoBasic {
   isTag: boolean;
 }
 
-export async function getGitInfoBasic(cwd = process.cwd()): Promise<GitInfoBasic> {
+export async function getGitInfo(cwd = process.cwd()): Promise<GitInfoBasic> {
   const options: Partial<SimpleGitOptions> = {
     baseDir: cwd,
     binary: 'git',
