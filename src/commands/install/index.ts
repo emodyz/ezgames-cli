@@ -170,7 +170,7 @@ export default class InstallIndex extends Command {
           enabled: ctx => Boolean(ctx.hostIsFQDN) && Boolean(ctx.isFrontEndBuildSuccessful),
           task: async ctx => {
             // TODO: Add cron job to auto renew tls certs
-            await requestTLS(true, 'inherit')
+            await requestTLS(true/* , 'inherit' */)
             saveKeyToEnv('EZG_NGINX_SHOULD_PUBLISH_TEMPLATES', '.notemplate')
             /************
               WebSockets

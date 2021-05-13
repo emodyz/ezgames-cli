@@ -24,7 +24,7 @@ export function saveConfigToEnv(answers: { name: string; domain: string; wmEmail
   env.DB_USERNAME = 'ezgames'
   env.DB_PASSWORD = randomBytes(20).toString('hex')
 
-  env.PUSHER_APP_KEY = randomBytes(20).toString('hex')
+  env.PUSHER_APP_KEY = randomBytes(16).toString('hex')
 
   env.EZG_HOST = answers.domain
   env.EZG_WM_EMAIL = answers.wmEmail
