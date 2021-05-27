@@ -3,6 +3,7 @@ import {readFileSync, writeFileSync} from 'fs-extra'
 import {EZG_APP_ENV_EXAMPLE_PATH, EZG_APP_ENV_PATH} from './paths'
 import validator from 'validator'
 import {randomBytes} from 'crypto'
+import {Range as SemverRange} from 'semver'
 
 export function getAppEnv(example = false): any {
   return parseEnv(readFileSync(example ? EZG_APP_ENV_EXAMPLE_PATH : EZG_APP_ENV_PATH, 'utf-8'))
@@ -25,8 +26,8 @@ export function saveConfigToEnv(answers: { name: string; domain: string; wmEmail
   env.DB_PASSWORD = randomBytes(20).toString('hex')
 
   /* TODO: FIND OUT WHY THIS ONLY WORKS AFTER A REBOOT & RESET
-  env.PUSHER_APP_KEY = randomBytes(16).toString('hex')
-*/
+  * env.PUSHER_APP_KEY = randomBytes(16).toString('hex')
+  */
   env.EZG_HOST = answers.domain
   env.EZG_WM_EMAIL = answers.wmEmail
   env.EZG_NGINX_SHOULD_PUBLISH_TEMPLATES = '.template'
@@ -64,3 +65,6 @@ export function saveKeyToEnv(key: string, value: string | number) {
 
   writeFileSync(EZG_APP_ENV_PATH, stringifyEnv(env))
 }
+
+// See readme for semver.satisfies() at https://www.npmjs.com/package/semver
+export const supportedVersions: SemverRange = new SemverRange('0.x >= 0.0.2')

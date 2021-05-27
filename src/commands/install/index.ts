@@ -54,6 +54,7 @@ export default class InstallIndex extends Command {
     const hasDockerCompose = Boolean(where('docker-compose'))
 
     if (!(fs.readdirSync(EZG_APP_PATH).length <= 1)) {
+      // TODO: Create custom "Error" classes for these situations
       throw new Error(chalk`{bgRed.white.bold EZGames has already been installed in: "${EZG_APP_PATH}"}`)
     }
 

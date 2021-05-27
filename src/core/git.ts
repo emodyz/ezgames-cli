@@ -1,4 +1,5 @@
 import simpleGit, {SimpleGit, SimpleGitOptions} from 'simple-git'
+import {EZG_APP_PATH} from './paths'
 
 export interface GitInfoBasic {
   current: string;
@@ -6,7 +7,7 @@ export interface GitInfoBasic {
   isTag: boolean;
 }
 
-export async function getGitInfo(cwd = process.cwd()): Promise<GitInfoBasic> {
+export async function getGitInfo(cwd = EZG_APP_PATH): Promise<GitInfoBasic> {
   const options: Partial<SimpleGitOptions> = {
     baseDir: cwd,
     binary: 'git',
@@ -29,5 +30,10 @@ export async function getGitInfo(cwd = process.cwd()): Promise<GitInfoBasic> {
   }
   repoStatus.current = repoStatus.current.replace(/(\r\n|\n|\r)/gm, '')
 
+  /**
+   * ⚠️ TODO: Remove this before publishing
+   */
+  repoStatus.current = 'v0.0.3'
+  repoStatus.isTag = true
   return repoStatus
 }
