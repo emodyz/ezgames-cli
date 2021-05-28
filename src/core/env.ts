@@ -67,4 +67,4 @@ export function saveKeyToEnv(key: string, value: string | number) {
 }
 
 // See readme for semver.satisfies() at https://www.npmjs.com/package/semver
-export const supportedVersions: SemverRange = new SemverRange('0.x >= 0.0.2')
+export const supportedVersions: SemverRange = new SemverRange('0.x >= 0.0.1')

@@ -33,7 +33,7 @@ export async function getGitInfo(cwd = EZG_APP_PATH): Promise<GitInfoBasic> {
   /**
    * ⚠️ TODO: Remove this before publishing
    */
-  repoStatus.current = 'v0.0.3'
+  repoStatus.current = 'v0.0.1'
   repoStatus.isTag = true
   return repoStatus
 }

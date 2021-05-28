@@ -9,3 +9,5 @@ export default class GitHub {
 
   public static requestAnonymously = request
 }
+
+export const gitHubApi = process.env.EZG_CLI_GITHUB_TOKEN ? GitHub.requestWithAuth : GitHub.requestAnonymously

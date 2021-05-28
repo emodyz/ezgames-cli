@@ -8,7 +8,7 @@ import cli from 'cli-ux'
 import execa from 'execa'
 import collect, {Collection} from 'collect.js'
 import {TaskWrapper} from 'listr2/dist/lib/task-wrapper'
-import GitHub from '../../core/github'
+import {gitHubApi} from '../../core/github'
 import {EZG_APP_PATH} from '../../core/paths'
 import moment from 'moment/moment'
 import chalk from 'chalk'
@@ -253,8 +253,6 @@ export default class InstallIndex extends Command {
   }
 
   static async getVersions(): Promise<{ availableVersions: Array<string> | undefined; choices: Array<Record<string, string | null>> }> {
-    const gitHubApi = process.env.EZG_CLI_GITHUB_TOKEN ? GitHub.requestWithAuth : GitHub.requestAnonymously
-
     const latestRelease = (await gitHubApi('GET /repos/{owner}/{repo}/releases/latest', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',
@@ -275,6 +273,7 @@ export default class InstallIndex extends Command {
           message: `Stable (${latestRelease.tag_name})`,
           value: latestRelease.tag_name,
         },
+        // TODO: Programmatically build this array in order to check if a pre-release/stable release exist in the first place
         {
           name: 'preRelease',
           message: `Pre-release (${latestPreRelease.tag_name})`,
