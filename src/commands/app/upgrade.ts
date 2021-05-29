@@ -5,6 +5,8 @@ import {gitHubApi} from '../../core/github'
 import collect from 'collect.js'
 import semver from 'semver'
 import {supportedVersions} from '../../core/env'
+import Enquirer, {prompt} from 'enquirer'
+import ChoiceOptions = Enquirer.prompt.FormQuestion.ChoiceOptions
 
 export default class AppUpgrade extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Updater}`
@@ -44,6 +46,23 @@ export default class AppUpgrade extends Command {
       //
     }
 
-    console.log(availableReleases)
+    const upgradeChoices: ChoiceOptions[] = availableReleases.map((item: any): ChoiceOptions => {
+      return {
+        name: item.tag_name,
+        message: `${item.name}${item.prerelease ? chalk` {yellow [Pre-release]}` : ''}`,
+        value: item.tag_name,
+      }
+    }).all()
+
+    const form = {
+      message: 'Choose a version',
+      type: 'Select',
+      name: 'upgradeTarget',
+      choices: upgradeChoices,
+    }
+
+    const {upgradeTarget} = await prompt(form)
+
+    console.log(upgradeTarget)
   }
 }
