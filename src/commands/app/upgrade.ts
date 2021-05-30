@@ -4,7 +4,7 @@ import {getGitInfo} from '../../core/git'
 import {gitHubApi} from '../../core/github'
 import collect from 'collect.js'
 import semver from 'semver'
-import {supportedVersions} from '../../core/env'
+import {supportedVersions} from '../../core/env/env'
 import Enquirer, {prompt} from 'enquirer'
 import ChoiceOptions = Enquirer.prompt.FormQuestion.ChoiceOptions
 

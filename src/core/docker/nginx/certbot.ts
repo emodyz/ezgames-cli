@@ -1,6 +1,6 @@
 import {dockerComposeExec} from '../compose-exec'
 import {stdIo} from '../../../types/execa'
-import {getAppEnv} from '../../env'
+import {getAppEnv} from '../../env/env'
 
 export function requestTLS(tty = true, stdio: stdIo = 'pipe') {
   const env = getAppEnv()

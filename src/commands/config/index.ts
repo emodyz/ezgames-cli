@@ -4,7 +4,7 @@ import validator from 'validator'
 import {TaskWrapper} from 'listr2/dist/lib/task-wrapper'
 import {ListrContext as Ctx} from 'listr2/dist/interfaces/listr.interface'
 import {isIPv4} from 'net'
-import {saveConfigToEnv} from '../../core/env'
+import {saveConfigToEnv} from '../../core/env/env'
 
 export async function configureAppForm(task?: TaskWrapper<Ctx, any>) {
   const form =

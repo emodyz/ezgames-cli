@@ -16,7 +16,7 @@ import fs from 'fs-extra'
 import {configureAppForm} from '../config'
 import {tick as checkMark} from 'figures'
 import {dockerComposeUp} from '../../core/docker/compose-up'
-import {getAppEnv, saveConfigToEnv, saveKeyToEnv} from '../../core/env'
+import {getAppEnv, saveConfigToEnv, saveKeyToEnv} from '../../core/env/env'
 import {dockerComposeBuild} from '../../core/docker/compose-build'
 import {waitForHealthyApp} from '../../core/api/status'
 import BuildFront from '../build/front'
@@ -252,6 +252,7 @@ export default class InstallIndex extends Command {
     return choice
   }
 
+  // TODO Check against supportedVersions
   static async getVersions(): Promise<{ availableVersions: Array<string> | undefined; choices: Array<Record<string, string | null>> }> {
     const latestRelease = (await gitHubApi('GET /repos/{owner}/{repo}/releases/latest', {
       owner: 'emodyz',

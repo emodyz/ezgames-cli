@@ -1,6 +1,6 @@
 import axios from 'axios'
 import https from 'https'
-import {getAppEnv} from '../env'
+import {getAppEnv} from '../env/env'
 import * as rax from 'retry-axios'
 
 export async function getAppHealth() {

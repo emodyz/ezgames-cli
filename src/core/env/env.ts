@@ -1,6 +1,6 @@
 import {parse as parseEnv, stringify as stringifyEnv} from 'envfile'
 import {readFileSync, writeFileSync} from 'fs-extra'
-import {EZG_APP_ENV_EXAMPLE_PATH, EZG_APP_ENV_PATH} from './paths'
+import {EZG_APP_ENV_EXAMPLE_PATH, EZG_APP_ENV_PATH} from '../paths'
 import validator from 'validator'
 import {randomBytes} from 'crypto'
 import {Range as SemverRange} from 'semver'
@@ -57,7 +57,7 @@ export function saveConfigToEnv(answers: { name: string; domain: string; wmEmail
   writeFileSync(EZG_APP_ENV_PATH, stringifyEnv(env))
 }
 
-// TODO: allow the edition a multiple key-value pairs with only two I/O ops
+// TODO: allow the edition of multiple key-value pairs with only two I/O ops
 export function saveKeyToEnv(key: string, value: string | number) {
   const env = getAppEnv()
 
