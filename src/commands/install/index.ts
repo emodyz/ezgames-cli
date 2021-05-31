@@ -132,6 +132,7 @@ export default class InstallIndex extends Command {
                 enabled: (): boolean => Boolean(requestedReleaseTag),
                 task: async (_, task: any) => {
                   const answers = await configureAppForm(task)
+                  // TODO: RUN APPROPRIATE ENV PATCHES AFTER BASE CONFIG
                   saveConfigToEnv(answers)
                   ctx.hostIsFQDN = validator.isFQDN(answers.domain)
                   ctx.isConfigSuccessful = true
@@ -252,8 +253,9 @@ export default class InstallIndex extends Command {
     return choice
   }
 
-  // TODO Check against supportedVersions
+  // TODO: Check against supportedVersions
   static async getVersions(): Promise<{ availableVersions: Array<string> | undefined; choices: Array<Record<string, string | null>> }> {
+    // TODO: Replace this in the same fashion as the latestPreRelease
     const latestRelease = (await gitHubApi('GET /repos/{owner}/{repo}/releases/latest', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',

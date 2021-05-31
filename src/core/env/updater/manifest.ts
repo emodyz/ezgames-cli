@@ -3,8 +3,8 @@ import {EnvPatchesManifest, EnvPatchesManifestItem} from './types/manifest'
 
 const manifest: EnvPatchesManifest = collect<EnvPatchesManifestItem>([
   {
-    version: '0.0.1',
-    fileName: '',
+    version: '0.0.4',
+    fileName: '0-0-4',
   },
 ])
 

@@ -13,5 +13,5 @@ rules: {
   'prefer-destructuring': 'off',
   'semi': [ 'error', 'never' ],
   '@typescript-eslint/ban-ts-ignore': 'off',
-  'no-warning-comments': off
+  'no-warning-comments': 'off'
 }
