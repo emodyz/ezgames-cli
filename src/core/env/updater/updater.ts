@@ -21,17 +21,23 @@ export default class EnvUpdater {
 
   private getRelevantPatches() {
     return manifest.filter(item => {
-      return semver.gt(item.version, this.currentVersion) && semver.lte(major(item.version).toString(), major(this.targetVersion).toString())
+      // TODO: Switch to this condition before release when strict semver compliance is enforced
+      // return semver.gt(item.version, this.currentVersion) && major(item.version).toString() <= major(this.targetVersion).toString()
+      return semver.gt(item.version, this.currentVersion) && semver.lte(item.version, this.targetVersion)
     })
   }
 
-  public patch(env: Record<string, any>): Record<string, any> {
+  public async patch(env: Record<string, any>): Promise<Record<string, any>> {
     let patched = env
-    this.relevantPatches.each(async item => {
+
+    await this.relevantPatches.each(async item => {
       const {default: PatchC} = await import(`./patches/${item}`)
+
       const patch = new PatchC()
+
       patched = patch.run(patched)
     })
+
     return patched
   }
 }

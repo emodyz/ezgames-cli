@@ -1,4 +1,5 @@
 import {Command, flags} from '@oclif/command'
+import EnvUpdater from '../core/env/updater/updater'
 // import {collect} from 'collect.js'
 // import {getGitInfo} from '../core/git'
 // import {EZG_APP_PATH} from '../core/paths'
@@ -10,8 +11,8 @@ import {Command, flags} from '@oclif/command'
 // import {cli} from 'cli-ux'
 // import execa from 'execa'
 // import * as readline from 'readline'
-import semver from 'semver'
-import {supportedVersions} from '../core/env/env'
+// import semver from 'semver'
+// import {supportedVersions} from '../core/env/env'
 // import chalk from 'chalk'
 // import {EZG_APP_PATH} from '../core/paths'
 
@@ -23,10 +24,13 @@ export default class Test extends Command {
   }
 
   async run() {
+    const up = new EnvUpdater('0.0.1', '0.0.4')
+    console.log(await up.patch({test: true}))
+    // console.log(up.relevantPatches)
     // const source = collect(['../core/foo', '../core/bar'])
     // const {default: str} = await import(source.random().toString())
     // console.log(str)
-    console.log(semver.satisfies('v1.0.1', supportedVersions))
+    // console.log(semver.satisfies('v1.0.1', supportedVersions))
     // console.log(await getGitInfo())
     // await dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv(), false, true)
     /*
