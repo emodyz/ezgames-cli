@@ -19,7 +19,7 @@ $ npm install -g ezgames-cli
 $ ezgames COMMAND
 running command...
 $ ezgames (-v|--version|version)
-ezgames-cli/0.0.0 darwin-x64 node-v16.0.0
+ezgames-cli/0.0.0 darwin-x64 node-v16.2.0
 $ ezgames --help [COMMAND]
 USAGE
   $ ezgames COMMAND
@@ -134,14 +134,19 @@ _See code: [src/commands/app/stop.ts](https://github.com/ezmodyz/ezgames-cli/blo
 
 ## `ezgames app:upgrade`
 
-[35m[1mEZGames[22m[39m [36mUpdater[39m
+EZGames Updater
 
 ```
 USAGE
   $ ezgames app:upgrade
 
 OPTIONS
-  -h, --help  show CLI help
+  -h, --help            show CLI help
+  -l, --list            Lists available upgrade targets
+  --allow-pre-releases  Allows the user to select a pre-release as upgrade target
+
+ALIASES
+  $ ezgames upgrade
 ```
 
 _See code: [src/commands/app/upgrade.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/upgrade.ts)_
@@ -237,7 +242,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2
 
 ## `ezgames install`
 
-[35m[1mEZGames[22m[39m [36mInstaller[39m
+EZGames Installer
 
 ```
 USAGE

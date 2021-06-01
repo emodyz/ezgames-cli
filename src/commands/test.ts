@@ -1,8 +1,7 @@
 import {Command, flags} from '@oclif/command'
-import EnvUpdater from '../core/env/updater/updater'
+// import EnvUpdater from '../core/env/updater/updater'
 // import {collect} from 'collect.js'
 // import {getGitInfo} from '../core/git'
-// import {EZG_APP_PATH} from '../core/paths'
 // import {getAppEnv} from '../core/env'
 // import {dockerComposeExec} from '../core/docker/compose-exec'
 // import {Listr, ListrContext as Ctx} from 'listr2'
@@ -14,7 +13,8 @@ import EnvUpdater from '../core/env/updater/updater'
 // import semver from 'semver'
 // import {supportedVersions} from '../core/env/env'
 // import chalk from 'chalk'
-// import {EZG_APP_PATH} from '../core/paths'
+import {EZG_APP_PATH} from '../core/paths'
+import simpleGit, {SimpleGit, SimpleGitOptions} from 'simple-git'
 
 export default class Test extends Command {
   static description = 'Dummy Command used to test features'
@@ -24,8 +24,28 @@ export default class Test extends Command {
   }
 
   async run() {
-    const up = new EnvUpdater('0.0.1', '0.0.4')
-    console.log(await up.patch({test: true}))
+    const options: Partial<SimpleGitOptions> = {
+      baseDir: EZG_APP_PATH,
+      binary: 'git',
+      maxConcurrentProcesses: 6,
+    }
+
+    const git: SimpleGit = simpleGit(options)
+
+    console.log(await git.diffSummary(['tags/v0.0.3',
+      'resources',
+      'storage',
+      'public',
+      'package.json',
+      'yarn.lock',
+      'webpack.mix.js',
+      'webpack.config.js',
+      'tsconfig.json',
+      'tailwind.config.js',
+      'tailwind.typography.config.js',
+      '.env.example']))
+    // const up = new EnvUpdater('0.0.1', '0.0.4')
+    // console.log(await up.patch({test: true}))
     // console.log(up.relevantPatches)
     // const source = collect(['../core/foo', '../core/bar'])
     // const {default: str} = await import(source.random().toString())

@@ -1,6 +1,5 @@
 import manifest from './manifest'
 import semver from 'semver/preload'
-import {major} from 'semver'
 import {Collection} from 'collect.js'
 
 export default class EnvUpdater {

@@ -81,7 +81,10 @@
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-autocomplete"
-    ]
+    ],
+    "macos": {
+      "identifier": "eu.ezgames.cli"
+    }
   },
   "repository": "ezmodyz/ezgames-cli",
   "scripts": {
