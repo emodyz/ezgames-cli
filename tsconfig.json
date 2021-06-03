@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "outDir": "lib",
     "rootDir": "src",
-    "strict": false,
+    "strict": true,
     "target": "es2017",
     "baseUrl": "./src",
     "paths": {

@@ -7,14 +7,21 @@ export interface GitInfoBasic {
   isTag: boolean;
 }
 
-export async function getGitInfo(cwd = EZG_APP_PATH): Promise<GitInfoBasic> {
+// TODO Make this a singleton
+export function getGitInstance(cwd = EZG_APP_PATH): SimpleGit {
   const options: Partial<SimpleGitOptions> = {
     baseDir: cwd,
     binary: 'git',
     maxConcurrentProcesses: 6,
   }
 
-  const git: SimpleGit = simpleGit(options)
+  return simpleGit(options)
+}
+
+export async function getGitInfo(cwd = EZG_APP_PATH): Promise<GitInfoBasic> {
+  const git: SimpleGit = getGitInstance(cwd)
+
+  await git.fetch()
 
   const repoStatus = {
     current: '',
@@ -33,7 +40,7 @@ export async function getGitInfo(cwd = EZG_APP_PATH): Promise<GitInfoBasic> {
   /**
    * ⚠️ TODO: Remove this before publishing
    */
-  repoStatus.current = 'v0.0.1'
-  repoStatus.isTag = true
+  // repoStatus.current = 'v0.0.1'
+  // repoStatus.isTag = true
   return repoStatus
 }

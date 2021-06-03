@@ -1,12 +1,13 @@
 import {Command, flags} from '@oclif/command'
 import chalk from 'chalk'
-import {getGitInfo, GitInfoBasic} from '../../core/git'
+import {getGitInfo, getGitInstance, GitInfoBasic} from '../../core/git'
 import {gitHubApi} from '../../core/github'
 import collect from 'collect.js'
 import semver from 'semver'
 import {supportedVersions} from '../../core/env/env'
 import Enquirer, {prompt} from 'enquirer'
 import ChoiceOptions = Enquirer.prompt.FormQuestion.ChoiceOptions
+import {dockerComposeExec} from '../../core/docker/compose-exec'
 
 export default class AppUpgrade extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Updater}`
@@ -29,9 +30,37 @@ export default class AppUpgrade extends Command {
       throw new Error(chalk`{bgRed.white.bold \nCurrent version: "${gitInfo.current}"\nAutomatic updates are only supported when tracking a "semver" compliant GitHub release and not a branch like "master" or "dev"}`)
     }
 
-    const {upgradeTarget} = await this.upgradeTargetForm(await this.getRelevantChoices(gitInfo, flags))
+    const relevantChoices = await this.getRelevantChoices(gitInfo, flags)
 
-    console.log(upgradeTarget)
+    if (relevantChoices.length <= 0) {
+      this.log(chalk`{green.bold Current Version:} {cyan ${gitInfo.current}}`)
+      this.log(chalk`{green.bold Already up to date!}`)
+      this.exit(0)
+    }
+
+    const {upgradeTarget} = await this.upgradeTargetForm(relevantChoices)
+
+    const rebuildFront = await this.shouldRebuildFront(upgradeTarget.toString())
+
+    await dockerComposeExec('php', 'php artisan down', true, {stdio: 'inherit'})
+  }
+
+  async shouldRebuildFront(upgradeTarget: string): Promise<boolean> {
+    const git = getGitInstance()
+    const diff = await git.diffSummary([`tags/${upgradeTarget}`,
+      'resources',
+      'storage',
+      'public',
+      'package.json',
+      'yarn.lock',
+      'webpack.mix.js',
+      'webpack.config.js',
+      'tsconfig.json',
+      'tailwind.config.js',
+      'tailwind.typography.config.js',
+      '.env.example'])
+
+    return diff.changed > 0
   }
 
   async upgradeTargetForm(upgradeChoices: ChoiceOptions[]) {

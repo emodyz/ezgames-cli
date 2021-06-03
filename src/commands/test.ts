@@ -3,7 +3,7 @@ import {Command, flags} from '@oclif/command'
 // import {collect} from 'collect.js'
 // import {getGitInfo} from '../core/git'
 // import {getAppEnv} from '../core/env'
-// import {dockerComposeExec} from '../core/docker/compose-exec'
+import {dockerComposeExec} from '../core/docker/compose-exec'
 // import {Listr, ListrContext as Ctx} from 'listr2'
 // import {createUserForm} from './create/user'
 // import {phpArtisan} from '../core/docker/php/artisan'
@@ -13,8 +13,7 @@ import {Command, flags} from '@oclif/command'
 // import semver from 'semver'
 // import {supportedVersions} from '../core/env/env'
 // import chalk from 'chalk'
-import {EZG_APP_PATH} from '../core/paths'
-import simpleGit, {SimpleGit, SimpleGitOptions} from 'simple-git'
+// import {getGitInstance} from '../core/git'
 
 export default class Test extends Command {
   static description = 'Dummy Command used to test features'
@@ -24,15 +23,9 @@ export default class Test extends Command {
   }
 
   async run() {
-    const options: Partial<SimpleGitOptions> = {
-      baseDir: EZG_APP_PATH,
-      binary: 'git',
-      maxConcurrentProcesses: 6,
-    }
-
-    const git: SimpleGit = simpleGit(options)
-
-    console.log(await git.diffSummary(['tags/v0.0.3',
+    await dockerComposeExec('php', 'php artisan up', true, {stdio: 'inherit'})
+    // const git = getGitInstance()
+    /* console.log(await git.diffSummary(['tags/v0.0.3',
       'resources',
       'storage',
       'public',
@@ -43,7 +36,7 @@ export default class Test extends Command {
       'tsconfig.json',
       'tailwind.config.js',
       'tailwind.typography.config.js',
-      '.env.example']))
+      '.env.example'])) */
     // const up = new EnvUpdater('0.0.1', '0.0.4')
     // console.log(await up.patch({test: true}))
     // console.log(up.relevantPatches)
