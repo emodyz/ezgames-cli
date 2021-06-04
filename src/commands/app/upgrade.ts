@@ -67,6 +67,7 @@ export default class AppUpgrade extends Command {
     this.log(chalk`{yellow.bold Waiting for startup completion... (this will take a few minutes)}`)
 
     await cli.wait(90000)
+    await dockerComposeExec('php', 'php artisan up', true, {stdio: 'inherit'})
     await waitForHealthyApp()
 
     if (rebuildFront) {
