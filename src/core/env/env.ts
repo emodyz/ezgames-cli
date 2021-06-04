@@ -1,11 +1,12 @@
 import {parse as parseEnv, stringify as stringifyEnv} from 'envfile'
-import {readFileSync, writeFileSync} from 'fs-extra'
+import {readFileSync, writeFile} from 'fs-extra'
 import {EZG_APP_ENV_EXAMPLE_PATH, EZG_APP_ENV_PATH} from '../paths'
 import validator from 'validator'
 import {randomBytes} from 'crypto'
 import {Range as SemverRange} from 'semver'
 import EnvUpdater from './updater/updater'
 import {getGitInfo} from '../git'
+import {writeFileSync} from 'fs'
 
 export function getAppEnv(example = false): any {
   return parseEnv(readFileSync(example ? EZG_APP_ENV_EXAMPLE_PATH : EZG_APP_ENV_PATH, 'utf-8'))
@@ -61,7 +62,16 @@ export async function saveFullConfigToEnv(answers: { name: string; domain: strin
   const patcher = new EnvUpdater('base', gitInfo.current)
   const patched = await patcher.patch(env)
 
-  writeFileSync(EZG_APP_ENV_PATH, stringifyEnv(patched))
+  await writeFile(EZG_APP_ENV_PATH, stringifyEnv(patched))
+}
+
+export async function savePatchedEnv(currentVersion: string, targetVersion: string) {
+  const env = getAppEnv()
+
+  const patcher = new EnvUpdater(currentVersion, targetVersion)
+  const patched = await patcher.patch(env)
+
+  await writeFile(EZG_APP_ENV_PATH, stringifyEnv(patched))
 }
 
 // TODO: allow the edition of multiple key-value pairs with only two I/O ops
@@ -74,4 +84,4 @@ export function saveKeyToEnv(key: string, value: string | number) {
 }
 
 // See readme for semver.satisfies() at https://www.npmjs.com/package/semver
-export const supportedVersions: SemverRange = new SemverRange('0.x >= 0.0.1')
+export const supportedVersions: SemverRange = new SemverRange('0.x >= 0.0.1 <= 0.0.5')

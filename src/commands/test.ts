@@ -43,7 +43,7 @@ export default class Test extends Command {
     // const source = collect(['../core/foo', '../core/bar'])
     // const {default: str} = await import(source.random().toString())
     // console.log(str)
-    // console.log(semver.satisfies('v1.0.1', supportedVersions))
+    // console.log(semver.satisfies('v0.0.1', supportedVersions))
     // console.log(await getGitInfo())
     // await dockerComposeExec('php', 'yarn run production', EZG_APP_PATH, getAppEnv(), false, true)
     /*

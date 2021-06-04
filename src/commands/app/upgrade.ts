@@ -4,10 +4,16 @@ import {getGitInfo, getGitInstance, GitInfoBasic} from '../../core/git'
 import {gitHubApi} from '../../core/github'
 import collect from 'collect.js'
 import semver from 'semver'
-import {supportedVersions} from '../../core/env/env'
+import {savePatchedEnv, supportedVersions} from '../../core/env/env'
 import Enquirer, {prompt} from 'enquirer'
 import ChoiceOptions = Enquirer.prompt.FormQuestion.ChoiceOptions
 import {dockerComposeExec} from '../../core/docker/compose-exec'
+import {dockerComposeDown} from '../../core/docker/compose-down'
+import {dockerComposeBuild} from '../../core/docker/compose-build'
+import BuildFront from '../build/front'
+import {dockerComposeUp} from '../../core/docker/compose-up'
+import cli from 'cli-ux'
+import {waitForHealthyApp} from '../../core/api/status'
 
 export default class AppUpgrade extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Updater}`
@@ -44,6 +50,30 @@ export default class AppUpgrade extends Command {
     const rebuildContainers = await this.shouldRebuildContainers(upgradeTarget.toString())
 
     await dockerComposeExec('php', 'php artisan down', true, {stdio: 'inherit'})
+
+    const git = getGitInstance()
+    await git.checkout(upgradeTarget.toString())
+
+    await dockerComposeDown({stdio: 'inherit'})
+
+    await savePatchedEnv(gitInfo.current, upgradeTarget.toString())
+
+    if (rebuildContainers) {
+      await dockerComposeBuild({stdio: 'inherit'})
+    }
+
+    await dockerComposeUp({stdio: 'inherit'})
+
+    this.log(chalk`{yellow.bold Waiting for startup completion... (this will take a few minutes)}`)
+
+    await cli.wait(90000)
+    await waitForHealthyApp()
+
+    if (rebuildFront) {
+      await BuildFront.build(true, 'inherit')
+    }
+
+    this.log(chalk`{green.bold Update} {cyan ${upgradeTarget}} {green.bold Successfully installed!}`)
   }
 
   async shouldRebuildFront(upgradeTarget: string): Promise<boolean> {
