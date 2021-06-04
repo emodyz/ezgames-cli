@@ -4,12 +4,14 @@ import {EZG_APP_ENV_EXAMPLE_PATH, EZG_APP_ENV_PATH} from '../paths'
 import validator from 'validator'
 import {randomBytes} from 'crypto'
 import {Range as SemverRange} from 'semver'
+import EnvUpdater from './updater/updater'
+import {getGitInfo} from '../git'
 
 export function getAppEnv(example = false): any {
   return parseEnv(readFileSync(example ? EZG_APP_ENV_EXAMPLE_PATH : EZG_APP_ENV_PATH, 'utf-8'))
 }
 
-export function saveConfigToEnv(answers: { name: string; domain: string; wmEmail: string}) {
+export async function saveFullConfigToEnv(answers: { name: string; domain: string; wmEmail: string}) {
   const env = getAppEnv(true)
 
   const isDomain = validator.isFQDN(answers.domain)
@@ -54,7 +56,12 @@ export function saveConfigToEnv(answers: { name: string; domain: string; wmEmail
    */
   env.COMPOSE_PROJECT_NAME = `ezgames_${Date.now()}`
 
-  writeFileSync(EZG_APP_ENV_PATH, stringifyEnv(env))
+  const gitInfo = await getGitInfo()
+
+  const patcher = new EnvUpdater('base', gitInfo.current)
+  const patched = await patcher.patch(env)
+
+  writeFileSync(EZG_APP_ENV_PATH, stringifyEnv(patched))
 }
 
 // TODO: allow the edition of multiple key-value pairs with only two I/O ops

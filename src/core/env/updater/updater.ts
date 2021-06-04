@@ -19,10 +19,17 @@ export default class EnvUpdater {
   }
 
   private getRelevantPatches() {
+    if (this.currentVersion !== 'base') {
+      return manifest.filter(item => {
+        // TODO: Switch to this condition before release when strict semver compliance is enforced
+        // return semver.gt(item.version, this.currentVersion) && major(item.version).toString() <= major(this.targetVersion).toString()
+        return semver.gt(item.version, this.currentVersion) && semver.lte(item.version, this.targetVersion)
+      })
+    }
     return manifest.filter(item => {
       // TODO: Switch to this condition before release when strict semver compliance is enforced
-      // return semver.gt(item.version, this.currentVersion) && major(item.version).toString() <= major(this.targetVersion).toString()
-      return semver.gt(item.version, this.currentVersion) && semver.lte(item.version, this.targetVersion)
+      // return major(item.version).toString() <= major(this.targetVersion).toString()
+      return semver.lte(item.version, this.targetVersion)
     })
   }
 

@@ -16,7 +16,7 @@ import fs from 'fs-extra'
 import {configureAppForm} from '../config'
 import {tick as checkMark} from 'figures'
 import {dockerComposeUp} from '../../core/docker/compose-up'
-import {getAppEnv, saveConfigToEnv, saveKeyToEnv} from '../../core/env/env'
+import {getAppEnv, saveFullConfigToEnv, saveKeyToEnv, supportedVersions} from '../../core/env/env'
 import {dockerComposeBuild} from '../../core/docker/compose-build'
 import {waitForHealthyApp} from '../../core/api/status'
 import BuildFront from '../build/front'
@@ -24,6 +24,7 @@ import {createUserForm} from '../create/user'
 import {phpArtisan} from '../../core/docker/php/artisan'
 import validator from 'validator'
 import {requestTLS} from '../../core/docker/nginx/certbot'
+import semver from 'semver/preload'
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -132,8 +133,7 @@ export default class InstallIndex extends Command {
                 enabled: (): boolean => Boolean(requestedReleaseTag),
                 task: async (_, task: any) => {
                   const answers = await configureAppForm(task)
-                  // TODO: RUN APPROPRIATE ENV PATCHES AFTER BASE CONFIG
-                  saveConfigToEnv(answers)
+                  await saveFullConfigToEnv(answers)
                   ctx.hostIsFQDN = validator.isFQDN(answers.domain)
                   ctx.isConfigSuccessful = true
                 },
@@ -253,18 +253,19 @@ export default class InstallIndex extends Command {
     return choice
   }
 
-  // TODO: Check against supportedVersions
   static async getVersions(): Promise<{ availableVersions: Array<string> | undefined; choices: Array<Record<string, string | null>> }> {
+    InstallIndex.allReleases = collect((await gitHubApi('GET /repos/{owner}/{repo}/releases', {
+      owner: 'emodyz',
+      repo: 'MultigamingPanel',
+    })).data).filter((item: any) => {
+      return semver.satisfies(item.tag_name.toString(), supportedVersions)
+    })
+
     // TODO: Replace this in the same fashion as the latestPreRelease
     const latestRelease = (await gitHubApi('GET /repos/{owner}/{repo}/releases/latest', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',
     })).data
-
-    InstallIndex.allReleases = collect((await gitHubApi('GET /repos/{owner}/{repo}/releases', {
-      owner: 'emodyz',
-      repo: 'MultigamingPanel',
-    })).data)
 
     const latestPreRelease = InstallIndex.allReleases.filter((item: any) => item.prerelease).first()
 
@@ -282,6 +283,7 @@ export default class InstallIndex extends Command {
           message: `Pre-release (${latestPreRelease.tag_name})`,
           value: latestPreRelease.tag_name,
         },
+        /* TODO: Update "EnvPatcher" to support non-tagged release installation
         {
           name: '77',
           message: 'Feature #77 | Docker is coming 🏴‍☠️',
@@ -291,7 +293,7 @@ export default class InstallIndex extends Command {
           name: 'dev',
           message: 'Development',
           value: 'dev',
-        },
+        }, */
         {
           name: 'showAll',
           message: 'Show all versions',

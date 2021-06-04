@@ -41,6 +41,7 @@ export default class AppUpgrade extends Command {
     const {upgradeTarget} = await this.upgradeTargetForm(relevantChoices)
 
     const rebuildFront = await this.shouldRebuildFront(upgradeTarget.toString())
+    const rebuildContainers = await this.shouldRebuildContainers(upgradeTarget.toString())
 
     await dockerComposeExec('php', 'php artisan down', true, {stdio: 'inherit'})
   }
@@ -51,6 +52,8 @@ export default class AppUpgrade extends Command {
       'resources',
       'storage',
       'public',
+      '.eslintrc.yml',
+      '.eslintignore',
       'package.json',
       'yarn.lock',
       'webpack.mix.js',
@@ -59,6 +62,15 @@ export default class AppUpgrade extends Command {
       'tailwind.config.js',
       'tailwind.typography.config.js',
       '.env.example'])
+
+    return diff.changed > 0
+  }
+
+  async shouldRebuildContainers(upgradeTarget: string): Promise<boolean> {
+    const git = getGitInstance()
+    const diff = await git.diffSummary([`tags/${upgradeTarget}`,
+      'docker',
+      'docker-compose.yml'])
 
     return diff.changed > 0
   }
