@@ -1,5 +1,5 @@
 import {Command, flags as flgs} from '@oclif/command'
-import {where, packager, SYS_COMMANDS} from '../../core/node-sys'
+import {where, packager} from '../../core/node-sys'
 import {
   Listr,
   ListrContext as Ctx,
@@ -25,6 +25,11 @@ import {phpArtisan} from '../../core/docker/php/artisan'
 import validator from 'validator'
 import {requestTLS} from '../../core/docker/nginx/certbot'
 import semver from 'semver/preload'
+import {InstallerErrors} from '../../core/errors/installer'
+import EzgAlreadyInstalledError = InstallerErrors.EzgAlreadyInstalledError
+import GitNotFoundError = InstallerErrors.GitNotFoundError
+import DockerEngineNotFoundError = InstallerErrors.DockerEngineNotFoundError
+import DockerComposeNotFoundError = InstallerErrors.DockerComposeNotFoundError
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -55,8 +60,7 @@ export default class InstallIndex extends Command {
     const hasDockerCompose = Boolean(where('docker-compose'))
 
     if (!(fs.readdirSync(EZG_APP_PATH).length <= 1)) {
-      // TODO: Create custom "Error" classes for these situations
-      throw new Error(chalk`{bgRed.white.bold EZGames has already been installed in: "${EZG_APP_PATH}"}`)
+      throw new EzgAlreadyInstalledError()
     }
 
     const tasks = new Listr<Ctx>(
@@ -72,9 +76,7 @@ export default class InstallIndex extends Command {
                   if (!hasGit) {
                     // await installer('git', task.output)
                     // hasGit = true
-                    throw new Error(chalk`{yellow.bold Could not find Git on this system.}
-{cyan.bold Please run:} {green.bold ${SYS_COMMANDS[pkgManager.command]} git}
-{bgRed.white.bold Before restarting the installer}`)
+                    throw new GitNotFoundError()
                   }
                   hasGit = Boolean(where('git'))
                 },
@@ -84,9 +86,7 @@ export default class InstallIndex extends Command {
                 enabled: hasGit,
                 task: async (): Promise<any> => {
                   if (!hasDocker) {
-                    throw new Error(chalk`{yellow.bold Could not find Docker on this system.}
-{cyan.bold Please run:} {green.bold ${SYS_COMMANDS[pkgManager.command]} docker}
-{bgRed.white.bold Before restarting the installer}`)
+                    throw new DockerEngineNotFoundError()
                   }
                   hasDocker = Boolean(where('git'))
                 },
@@ -97,9 +97,7 @@ export default class InstallIndex extends Command {
                 task: async (): Promise<any> => {
                   if (!hasDockerCompose) {
                     await cli.wait(1000)
-                    throw new Error(chalk`{yellow.bold Could not find docker-compose on this system.}
-{cyan.bold Please run:} {green.bold ${SYS_COMMANDS[pkgManager.command]} docker-compose}
-{bgRed.white.bold Before restarting the installer}`)
+                    throw new DockerComposeNotFoundError()
                   }
                   hasDeps = true
                 },

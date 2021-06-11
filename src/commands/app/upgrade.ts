@@ -14,6 +14,8 @@ import BuildFront from '../build/front'
 import {dockerComposeUp} from '../../core/docker/compose-up'
 import cli from 'cli-ux'
 import {waitForHealthyApp} from '../../core/api/status'
+import {UpdaterErrors} from '../../core/errors/updater'
+import UnsupportedCurrentVersionError = UpdaterErrors.UnsupportedCurrentVersionError
 
 export default class AppUpgrade extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Updater}`
@@ -27,13 +29,14 @@ export default class AppUpgrade extends Command {
     // TODO: Add a flag to manually set a target version
   }
 
+  // TODO: Check if App is running
   async run() {
     const {flags} = this.parse(AppUpgrade)
 
     const gitInfo = await getGitInfo()
 
     if (!gitInfo.isTag || !semver.valid(gitInfo.current)) {
-      throw new Error(chalk`{bgRed.white.bold \nCurrent version: "${gitInfo.current}"\nAutomatic updates are only supported when tracking a "semver" compliant GitHub release and not a branch like "master" or "dev"}`)
+      throw new UnsupportedCurrentVersionError(gitInfo.current)
     }
 
     const relevantChoices = await this.getRelevantChoices(gitInfo, flags)

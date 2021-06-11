@@ -2,6 +2,8 @@ import axios from 'axios'
 import https from 'https'
 import {getAppEnv} from '../env/env'
 import * as rax from 'retry-axios'
+import {ApiErrors} from '../errors/api'
+import InvalidHealthCheckResponseError = ApiErrors.InvalidHealthCheckResponseError
 
 export async function getAppHealth() {
   const {data: health} = await axios.get(`http://${getAppEnv().EZG_HOST}/health`, {
@@ -16,7 +18,7 @@ export async function getAppHealth() {
   })
 
   if (typeof health !== 'object' || health === null) {
-    throw new Error('Invalid HealthCheck response')
+    throw new InvalidHealthCheckResponseError()
   }
 
   return health
