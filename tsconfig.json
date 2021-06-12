@@ -10,7 +10,8 @@
     "target": "es2017",
     "baseUrl": "./src",
     "paths": {
-      "enquirer": ["types/enquirer.d.ts"]
+      // TODO: Waiting on this pr https://github.com/enquirer/enquirer/pull/307
+      // "enquirer": ["types/enquirer.d.ts"]
     }
   },
   "include": [

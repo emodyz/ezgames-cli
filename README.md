@@ -19,7 +19,7 @@ $ npm install -g ezgames-cli
 $ ezgames COMMAND
 running command...
 $ ezgames (-v|--version|version)
-ezgames-cli/0.0.0 darwin-x64 node-v16.2.0
+ezgames-cli/0.0.0 darwin-x64 node-v16.3.0
 $ ezgames --help [COMMAND]
 USAGE
   $ ezgames COMMAND
@@ -94,6 +94,7 @@ OPTIONS
 
 ALIASES
   $ ezgames start
+  $ ezgames up
 ```
 
 _See code: [src/commands/app/start.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/start.ts)_
@@ -128,6 +129,7 @@ OPTIONS
 
 ALIASES
   $ ezgames stop
+  $ ezgames down
 ```
 
 _See code: [src/commands/app/stop.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/app/stop.ts)_

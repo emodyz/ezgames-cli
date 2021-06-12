@@ -5,8 +5,8 @@ import {gitHubApi} from '../../core/github'
 import collect from 'collect.js'
 import semver from 'semver'
 import {savePatchedEnv, supportedVersions} from '../../core/env/env'
-import Enquirer, {prompt} from 'enquirer'
-import ChoiceOptions = Enquirer.prompt.FormQuestion.ChoiceOptions
+import /* Enquirer, */ {prompt} from 'enquirer'
+// import ChoiceOptions = Enquirer.prompt.FormQuestion.ChoiceOptions
 import {dockerComposeExec} from '../../core/docker/compose-exec'
 import {dockerComposeDown} from '../../core/docker/compose-down'
 import {dockerComposeBuild} from '../../core/docker/compose-build'
@@ -109,7 +109,7 @@ export default class AppUpgrade extends Command {
     return diff.changed > 0
   }
 
-  async upgradeTargetForm(upgradeChoices: ChoiceOptions[]) {
+  async upgradeTargetForm(upgradeChoices: FormChoiceOptions[]): Promise<Record<any, any>> {
     const form = {
       message: 'Choose a version',
       type: 'Select',
@@ -120,7 +120,7 @@ export default class AppUpgrade extends Command {
     return prompt(form)
   }
 
-  async getRelevantChoices(gitInfo: GitInfoBasic, flags: Record<any, any>): Promise<ChoiceOptions[]> {
+  async getRelevantChoices(gitInfo: GitInfoBasic, flags: Record<any, any>): Promise<FormChoiceOptions[]> {
     const releases = collect((await gitHubApi('GET /repos/{owner}/{repo}/releases', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',
@@ -139,7 +139,7 @@ export default class AppUpgrade extends Command {
       //
     }
 
-    return  availableReleases.map((item: any): ChoiceOptions => {
+    return  availableReleases.map((item: any): FormChoiceOptions => {
       return {
         name: item.tag_name,
         message: `${item.name}${item.prerelease ? chalk` {yellow [Pre-release]}` : ''}`,
@@ -148,3 +148,12 @@ export default class AppUpgrade extends Command {
     }).all()
   }
 }
+
+export type FormChoiceOptions = {
+  name: string;
+  value?: string;
+  message: string;
+  hint?: string;
+  initial?: string;
+  disabled?: boolean;
+};
