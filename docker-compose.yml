@@ -7,10 +7,19 @@ services:
       context: .
       dockerfile: docker/debian/Dockerfile
     container_name: ezg-cli-debian
+    environment:
+      EZG_CLI_GITHUB_TOKEN: '${EZG_CLI_GITHUB_TOKEN}'
+      AWS_ACCESS_KEY_ID: '${AWS_ACCESS_KEY_ID}'
+      AWS_SECRET_ACCESS_KEY: '${AWS_SECRET_ACCESS_KEY}'
+      EZGAMES_DEB_KEY: '22D1D596490A21B8'
     volumes:
       - '.:/usr/share/emodyz/ezg-cli'
+      - 'ezgames_cli_gpg:/root/.gnupg'
     networks:
       - ezgames
 networks:
   ezgames:
     driver: bridge
+volumes:
+  ezgames_cli_gpg:
+    driver: local

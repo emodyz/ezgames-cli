@@ -4,4 +4,6 @@ WORKDIR /usr/share/emodyz/ezg-cli
 
 RUN apt update && apt upgrade -y
 
-RUN npm link
+RUN apt install -y apt-utils
+
+RUN yarn global add @oclif/dev-cli aws-sdk

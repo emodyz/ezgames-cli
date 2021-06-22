@@ -42,6 +42,7 @@ USAGE
 * [`ezgames install`](#ezgames-install)
 * [`ezgames ssl:sign [FILE]`](#ezgames-sslsign-file)
 * [`ezgames test`](#ezgames-test)
+* [`ezgames update [CHANNEL]`](#ezgames-update-channel)
 
 ## `ezgames app:exec TARGET COMMAND`
 
@@ -286,4 +287,15 @@ OPTIONS
 ```
 
 _See code: [src/commands/test.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.0/src/commands/test.ts)_
+
+## `ezgames update [CHANNEL]`
+
+update the ezgames CLI
+
+```
+USAGE
+  $ ezgames update [CHANNEL]
+```
+
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.10/src/commands/update.ts)_
 <!-- commandsstop -->
