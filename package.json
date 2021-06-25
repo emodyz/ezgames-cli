@@ -1,7 +1,7 @@
 {
   "name": "ezgames-cli",
   "description": "EZGames CLI Toolkit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Saber Nouira @iWirk",
   "bin": {
     "ezgames": "./bin/run"
@@ -90,7 +90,8 @@
     },
     "update": {
       "s3": {
-        "bucket": "ezg-cli-test-apt-repo"
+        "bucket": "ezg-cli-test-apt-repo",
+        "xz": true
       }
     }
   },
@@ -100,7 +101,8 @@
     "posttest": "eslint . --ext .ts --config .eslintrc.yml",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "oclif-dev readme && git add README.md"
+    "version": "oclif-dev readme && git add README.md",
+    "build": "oclif-dev pack --xz"
   },
   "types": "lib/index.d.ts"
 }

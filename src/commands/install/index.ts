@@ -30,6 +30,7 @@ import EzgAlreadyInstalledError = InstallerErrors.EzgAlreadyInstalledError
 import GitNotFoundError = InstallerErrors.GitNotFoundError
 import DockerEngineNotFoundError = InstallerErrors.DockerEngineNotFoundError
 import DockerComposeNotFoundError = InstallerErrors.DockerComposeNotFoundError
+import EzgNoSupportedVersionAvailableError = InstallerErrors.EzgNoSupportedVersionAvailableError
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -258,6 +259,10 @@ export default class InstallIndex extends Command {
     })).data).filter((item: any) => {
       return semver.satisfies(item.tag_name.toString(), supportedVersions)
     })
+
+    if (InstallIndex.allReleases.isEmpty()) {
+      throw new EzgNoSupportedVersionAvailableError()
+    }
 
     // TODO: Replace this in the same fashion as the latestPreRelease
     const latestRelease = (await gitHubApi('GET /repos/{owner}/{repo}/releases/latest', {

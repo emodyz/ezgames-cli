@@ -11,6 +11,15 @@ export namespace InstallerErrors {
     }
   }
 
+  export class EzgNoSupportedVersionAvailableError extends Error {
+    constructor() {
+      const message = chalk`{red.bold No supported version available!}
+      {green Try running 'ezgames update' before restarting the installer}`
+      super(message)
+      this.name = 'InstallerEzgNoSupportedVersionAvailableError'
+    }
+  }
+
   export class GitNotFoundError extends Error {
     constructor() {
       const pkgManager = packager()

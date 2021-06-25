@@ -29,7 +29,6 @@ export default class AppUpgrade extends Command {
     // TODO: Add a flag to manually set a target version
   }
 
-  // TODO: Check if App is running
   async run() {
     const {flags} = this.parse(AppUpgrade)
 
@@ -52,6 +51,7 @@ export default class AppUpgrade extends Command {
     const rebuildFront = await this.shouldRebuildFront(upgradeTarget.toString())
     const rebuildContainers = await this.shouldRebuildContainers(upgradeTarget.toString())
 
+    // TODO: Check if App is running before attempting to enter maintenance mode
     await dockerComposeExec('php', 'php artisan down', true, {stdio: 'inherit'})
 
     const git = getGitInstance()
