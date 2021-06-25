@@ -199,8 +199,10 @@ export default class InstallIndex extends Command {
 
     await tasks.run()
 
-    this.log(' ')
+    // Weired Fix for wss not working
+    await phpArtisan('queue:restart')
 
+    this.log(' ')
     this.log(chalk.cyan`{green ${checkMark}} {cyan.bold EZGames} {green ${requestedReleaseTag}} is now {green.bold available} at {cyan.bold.underline ${getAppEnv().APP_URL}}`)
 
     // TODO: Add notifications. see: https://oclif.io/docs/notifications
