@@ -1,8 +1,8 @@
-import {Command, flags} from '@oclif/command'
+import {Command, flags as flgs} from '@oclif/command'
 import chalk from 'chalk'
 import {getGitInfo, getGitInstance, GitInfoBasic} from '../../core/git'
 import {gitHubApi} from '../../core/github'
-import collect from 'collect.js'
+import collect, {Collection} from 'collect.js'
 import semver from 'semver'
 import {savePatchedEnv, supportedVersions} from '../../core/env/env'
 import /* Enquirer, */ {prompt} from 'enquirer'
@@ -23,14 +23,20 @@ export default class AppUpgrade extends Command {
   static aliases = ['upgrade']
 
   static flags = {
-    help: flags.help({char: 'h'}),
-    list: flags.boolean({char: 'l', description: 'Lists available upgrade targets'}),
-    'allow-pre-releases': flags.boolean({description: 'Allows the user to select a pre-release as upgrade target'}),
-    // TODO: Add a flag to manually set a target version
+    help: flgs.help({char: 'h'}),
+    list: flgs.boolean({char: 'l', description: 'Lists available upgrade targets'}),
+    'allow-pre-releases': flgs.boolean({description: 'Allows the user to select a pre-release as upgrade target'}),
+    maintenance: flgs.boolean({
+      description: 'Puts the app into maintenance mode before starting the upgrade process',
+      default: true,
+      allowNo: true}),
+    target: flgs.string({char: 't', description: 'The version you wish to upgrade to'}),
   }
 
+  static availableReleases: Collection<any>
+
   async run() {
-    const {flags} = this.parse(AppUpgrade)
+    const {flags: base_flags} = this.parse(AppUpgrade)
 
     const gitInfo = await getGitInfo()
 
@@ -38,7 +44,13 @@ export default class AppUpgrade extends Command {
       throw new UnsupportedCurrentVersionError(gitInfo.current)
     }
 
-    const relevantChoices = await this.getRelevantChoices(gitInfo, flags)
+    const relevantChoices = await this.getRelevantChoices(gitInfo, base_flags)
+
+    AppUpgrade.flags.target = flgs.string({
+      options: AppUpgrade.availableReleases.all(),
+      char: 't', description: 'The version you wish to upgrade to',
+    })
+    const {flags} = this.parse(AppUpgrade)
 
     if (relevantChoices.length <= 0) {
       this.log(chalk`{green.bold Current Version:} {cyan ${gitInfo.current}}`)
@@ -46,13 +58,14 @@ export default class AppUpgrade extends Command {
       this.exit(0)
     }
 
-    const {upgradeTarget} = await this.upgradeTargetForm(relevantChoices)
+    const upgradeTarget = flags.target ? flags.target : await this.upgradeTargetForm(relevantChoices)
 
     const rebuildFront = await this.shouldRebuildFront(upgradeTarget.toString())
     const rebuildContainers = await this.shouldRebuildContainers(upgradeTarget.toString())
 
-    // TODO: Check if App is running before attempting to enter maintenance mode
-    await dockerComposeExec('php', 'php artisan down', true, {stdio: 'inherit'})
+    if (flags.maintenance) {
+      await dockerComposeExec('php', 'php artisan down', true, {stdio: 'inherit'})
+    }
 
     const git = getGitInstance()
     await git.checkout(upgradeTarget.toString())
@@ -138,6 +151,8 @@ export default class AppUpgrade extends Command {
     if (availableReleases.isEmpty()) {
       //
     }
+
+    AppUpgrade.availableReleases = availableReleases.map(item => item.tag_name)
 
     return  availableReleases.map((item: any): FormChoiceOptions => {
       return {

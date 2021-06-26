@@ -19,7 +19,7 @@ $ npm install -g ezgames-cli
 $ ezgames COMMAND
 running command...
 $ ezgames (-v|--version|version)
-ezgames-cli/0.0.2 darwin-x64 node-v16.3.0
+ezgames-cli/0.0.4 darwin-x64 node-v16.3.0
 $ ezgames --help [COMMAND]
 USAGE
   $ ezgames COMMAND
@@ -63,7 +63,7 @@ ALIASES
   $ ezgames exec
 ```
 
-_See code: [src/commands/app/exec.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/app/exec.ts)_
+_See code: [src/commands/app/exec.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/app/exec.ts)_
 
 ## `ezgames app:restart`
 
@@ -80,7 +80,7 @@ ALIASES
   $ ezgames restart
 ```
 
-_See code: [src/commands/app/restart.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/app/restart.ts)_
+_See code: [src/commands/app/restart.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/app/restart.ts)_
 
 ## `ezgames app:start`
 
@@ -98,7 +98,7 @@ ALIASES
   $ ezgames up
 ```
 
-_See code: [src/commands/app/start.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/app/start.ts)_
+_See code: [src/commands/app/start.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/app/start.ts)_
 
 ## `ezgames app:status`
 
@@ -115,7 +115,7 @@ ALIASES
   $ ezgames status
 ```
 
-_See code: [src/commands/app/status.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/app/status.ts)_
+_See code: [src/commands/app/status.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/app/status.ts)_
 
 ## `ezgames app:stop`
 
@@ -133,7 +133,7 @@ ALIASES
   $ ezgames down
 ```
 
-_See code: [src/commands/app/stop.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/app/stop.ts)_
+_See code: [src/commands/app/stop.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/app/stop.ts)_
 
 ## `ezgames app:upgrade`
 
@@ -146,13 +146,15 @@ USAGE
 OPTIONS
   -h, --help            show CLI help
   -l, --list            Lists available upgrade targets
+  -t, --target=target   The version you wish to upgrade to
   --allow-pre-releases  Allows the user to select a pre-release as upgrade target
+  --[no-]maintenance    Puts the app into maintenance mode before starting the upgrade process
 
 ALIASES
   $ ezgames upgrade
 ```
 
-_See code: [src/commands/app/upgrade.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/app/upgrade.ts)_
+_See code: [src/commands/app/upgrade.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/app/upgrade.ts)_
 
 ## `ezgames autocomplete [SHELL]`
 
@@ -189,7 +191,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/build/front.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/build/front.ts)_
+_See code: [src/commands/build/front.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/build/front.ts)_
 
 ## `ezgames config`
 
@@ -206,7 +208,7 @@ OPTIONS
   -n, --name=name      Community Name
 ```
 
-_See code: [src/commands/config/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/config/index.ts)_
+_See code: [src/commands/config/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/config/index.ts)_
 
 ## `ezgames create:user`
 
@@ -224,7 +226,7 @@ OPTIONS
   -r, --role=role          Role to be assigned to the future user
 ```
 
-_See code: [src/commands/create/user.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/create/user.ts)_
+_See code: [src/commands/create/user.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/create/user.ts)_
 
 ## `ezgames help [COMMAND]`
 
@@ -256,7 +258,7 @@ OPTIONS
   -r, --release=release  GitHub Release Tag
 ```
 
-_See code: [src/commands/install/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/install/index.ts)_
+_See code: [src/commands/install/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/install/index.ts)_
 
 ## `ezgames ssl:sign [FILE]`
 
@@ -272,7 +274,7 @@ OPTIONS
   -n, --name=name  name to print
 ```
 
-_See code: [src/commands/ssl/sign.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/ssl/sign.ts)_
+_See code: [src/commands/ssl/sign.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/ssl/sign.ts)_
 
 ## `ezgames test`
 
@@ -286,7 +288,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/test.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.2/src/commands/test.ts)_
+_See code: [src/commands/test.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.4/src/commands/test.ts)_
 
 ## `ezgames update [CHANNEL]`
 
