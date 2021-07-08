@@ -152,7 +152,7 @@ export default class InstallIndex extends Command {
           enabled: ctx => Boolean(ctx.isBuildSuccessful),
           task: async ctx => {
             await dockerComposeUp()
-            await cli.wait(90000)
+            await cli.wait(60000)
             await waitForHealthyApp()
             ctx.isStartUpSuccessful = true
           },

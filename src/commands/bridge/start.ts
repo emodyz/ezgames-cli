@@ -1,9 +1,6 @@
 import {Command, flags} from '@oclif/command'
-import {CliErrors} from '../../core/errors/cli'
-import CommandNotYetImplementedError = CliErrors.CommandNotYetImplementedError
 
-// TODO: Implement this command with env integrity checks
-export default class SslSign extends Command {
+export default class BridgeStart extends Command {
   static description = 'describe the command here'
 
   static flags = {
@@ -17,12 +14,10 @@ export default class SslSign extends Command {
   static args = [{name: 'file'}]
 
   async run() {
-    const {args, flags} = this.parse(SslSign)
-
-    throw new CommandNotYetImplementedError()
+    const {args, flags} = this.parse(BridgeStart)
 
     const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /Users/wirk/Documents/Work/Emodyz/ezgames-cli/src/commands/ssl/sign.ts`)
+    this.log(`hello ${name} from /Users/wirk/Documents/Work/Emodyz/ezgames-cli/src/commands/bridge/start.ts`)
     if (args.file && flags.force) {
       this.log(`you input --force and --file: ${args.file}`)
     }

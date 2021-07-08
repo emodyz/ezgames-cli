@@ -58,21 +58,21 @@ export default class AppUpgrade extends Command {
       this.exit(0)
     }
 
-    const upgradeTarget = flags.target ? flags.target : await this.upgradeTargetForm(relevantChoices)
+    const upgradeTarget: string = flags.target ? flags.target : (await this.upgradeTargetForm(relevantChoices)).upgradeTarget
 
-    const rebuildFront = await this.shouldRebuildFront(upgradeTarget.toString())
-    const rebuildContainers = await this.shouldRebuildContainers(upgradeTarget.toString())
+    const rebuildFront = await this.shouldRebuildFront(upgradeTarget)
+    const rebuildContainers = await this.shouldRebuildContainers(upgradeTarget)
 
     if (flags.maintenance) {
       await dockerComposeExec('php', 'php artisan down', true, {stdio: 'inherit'})
     }
 
     const git = getGitInstance()
-    await git.checkout(upgradeTarget.toString())
+    await git.checkout(upgradeTarget)
 
     await dockerComposeDown({stdio: 'inherit'})
 
-    await savePatchedEnv(gitInfo.current, upgradeTarget.toString())
+    await savePatchedEnv(gitInfo.current, upgradeTarget)
 
     if (rebuildContainers) {
       await dockerComposeBuild({stdio: 'inherit'})
@@ -82,7 +82,7 @@ export default class AppUpgrade extends Command {
 
     this.log(chalk`{yellow.bold Waiting for startup completion... (this will take a few minutes)}`)
 
-    await cli.wait(90000)
+    await cli.wait(60000)
     await dockerComposeExec('php', 'php artisan up', true, {stdio: 'inherit'})
     await waitForHealthyApp()
 
@@ -90,7 +90,7 @@ export default class AppUpgrade extends Command {
       await BuildFront.build(true, 'inherit')
     }
 
-    this.log(chalk`{green.bold Update} {cyan ${upgradeTarget}} {green.bold Successfully installed!}`)
+    this.log(chalk`{green.bold Update} {cyan ${upgradeTarget}} {green.bold has been installed successfully!}`)
   }
 
   async shouldRebuildFront(upgradeTarget: string): Promise<boolean> {

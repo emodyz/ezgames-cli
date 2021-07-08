@@ -22,6 +22,7 @@ export async function getGitInfo(cwd = EZG_APP_PATH): Promise<GitInfoBasic> {
   const git: SimpleGit = getGitInstance(cwd)
 
   await git.fetch()
+  await git.fetch(['origin', '--tags', '--force'])
 
   const repoStatus = {
     current: '',

@@ -1,13 +1,15 @@
 {
   "name": "ezgames-cli",
   "description": "EZGames CLI Toolkit",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "author": "Saber Nouira @iWirk",
   "bin": {
     "ezgames": "./bin/run"
   },
   "bugs": "https://github.com/ezmodyz/ezgames-cli/issues",
   "dependencies": {
+    "@grpc/grpc-js": "^1.3.4",
+    "@grpc/proto-loader": "^0.6.3",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/errors": "^1.3.4",
@@ -29,6 +31,7 @@
     "minimist": "^1.2.5",
     "moment": "^2.29.1",
     "node-notifier": "^9.0.1",
+    "pm2": "^5.1.0",
     "retry-axios": "^2.4.0",
     "semver": "^7.3.4",
     "simple-git": "^2.38.1",
