@@ -1,25 +1,50 @@
 import {Command, flags} from '@oclif/command'
+import pm2 from 'pm2'
+import {CliErrors} from '../../core/errors/cli'
+import Pm2DaemonError = CliErrors.Pm2DaemonError
+import Pm2ProcessError = CliErrors.Pm2ProcessError
+import Pm2RpcError = CliErrors.Pm2RpcError
 
 export default class BridgeStart extends Command {
   static description = 'describe the command here'
 
   static flags = {
     help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
   }
 
-  static args = [{name: 'file'}]
+  // static args = [{name: 'file'}]
 
   async run() {
-    const {args, flags} = this.parse(BridgeStart)
+    // const {args, flags} = this.parse(BridgeStart)
+    pm2.connect(function (err) {
+      if (err) {
+        throw new Pm2DaemonError(err)
+      }
 
-    const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /Users/wirk/Documents/Work/Emodyz/ezgames-cli/src/commands/bridge/start.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
-    }
+      pm2.start({
+        script: 'ezgames test',
+        name: 'test-bridge',
+      }, function (err, apps) {
+        if (err) {
+          pm2.disconnect()
+          throw new Pm2ProcessError(err)
+        }
+
+        pm2.launchBus(function (err, pm2_bus) {
+          pm2_bus.on('process:msg', function (packet: any) {
+            console.log(packet)
+          })
+
+          pm2_bus.on('process:endLogs', function () {
+            pm2.disconnect()
+          })
+
+          if (err) {
+            pm2.disconnect()
+            throw new Pm2RpcError(err)
+          }
+        })
+      })
+    })
   }
 }

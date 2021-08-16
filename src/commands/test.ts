@@ -1,9 +1,10 @@
 import {Command, flags} from '@oclif/command'
+import {cli} from 'cli-ux'
 // import EnvUpdater from '../core/env/updater/updater'
 // import {collect} from 'collect.js'
 // import {getGitInfo} from '../core/git'
 // import {getAppEnv} from '../core/env'
-import {dockerComposeExec} from '../core/docker/compose-exec'
+// import {dockerComposeExec} from '../core/docker/compose-exec'
 // import {Listr, ListrContext as Ctx} from 'listr2'
 // import {createUserForm} from './create/user'
 // import {phpArtisan} from '../core/docker/php/artisan'
@@ -23,7 +24,22 @@ export default class Test extends Command {
   }
 
   async run() {
-    await dockerComposeExec('php', 'php artisan up', true, {stdio: 'inherit'})
+    process.send?.({
+      type: 'process:msg',
+      data: {
+        success: true,
+      },
+    })
+
+    await cli.wait(5000)
+
+    process.send?.({
+      type: 'process:endLogs',
+      data: {
+        end: true,
+      },
+    })
+    // await dockerComposeExec('php', 'php artisan up', true, {stdio: 'inherit'})
     // const git = getGitInstance()
     /* console.log(await git.diffSummary(['tags/v0.0.3',
       'resources',
