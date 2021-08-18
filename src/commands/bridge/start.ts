@@ -14,6 +14,7 @@ export default class BridgeStart extends Command {
 
   // static args = [{name: 'file'}]
 
+  // TODO: Execute "pm2 install pm2-logrotate" with cli installation
   async run() {
     // const {args, flags} = this.parse(BridgeStart)
     pm2.connect(function (err) {
@@ -22,9 +23,9 @@ export default class BridgeStart extends Command {
       }
 
       pm2.start({
-        script: 'ezgames test',
-        name: 'test-bridge',
-      }, function (err, apps) {
+        script: 'ezgames bridge:listen',
+        name: 'ezg-bridge',
+      }, function (err) {
         if (err) {
           pm2.disconnect()
           throw new Pm2ProcessError(err)

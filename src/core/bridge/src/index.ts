@@ -10,16 +10,18 @@ class Bridge implements BridgeServer {
   [name: string]: UntypedHandleCall
 }
 
-function serve(): void {
-  const server = new grpc.Server()
+export class BridgeManager {
+  static serve(): void {
+    const server = new grpc.Server()
 
-  server.addService(BridgeService, new Bridge())
+    server.addService(BridgeService, new Bridge())
 
-  server.bindAsync('localhost:666', ServerCredentials.createInsecure(), (err, port) => {
-    if (err) {
-      throw err
-    }
-    console.log(`Listening on ${port}`)
-    server.start()
-  })
+    server.bindAsync('localhost:6660', ServerCredentials.createInsecure(), (err, port) => {
+      if (err) {
+        throw err
+      }
+      console.log(`Listening on ${port}`)
+      server.start()
+    })
+  }
 }
