@@ -9,13 +9,15 @@ export default class BridgeListen extends Command {
     // flag with a value (-n, --name=VALUE)
     name: flags.string({char: 'n', description: 'name to print'}),
     // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
+    daemon: flags.boolean({char: 'd', description: ''}),
   }
 
   // static args = [{name: 'file'}]
 
   async run() {
-    // const {args, flags} = this.parse(BridgeListen)
-    BridgeManager.serve()
+    const {flags} = this.parse(BridgeListen)
+    const bridge = new BridgeManager('localhost', 6660, false, flags.daemon)
+
+    bridge.listen()
   }
 }
