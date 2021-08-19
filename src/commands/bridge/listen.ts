@@ -1,8 +1,10 @@
 import {Command, flags} from '@oclif/command'
-import {BridgeManager} from '../../core/bridge/src'
+import {BridgeManager} from '../../core/bridge/src/bridge-manager'
 
 export default class BridgeListen extends Command {
-  static description = 'describe the command here'
+  static description = 'Internal command used to bind the grpc bridge server to the pm2 daemon'
+
+  static hidden = true
 
   static flags = {
     help: flags.help({char: 'h'}),

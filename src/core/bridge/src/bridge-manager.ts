@@ -1,16 +1,8 @@
 import * as grpc from '@grpc/grpc-js'
-import {BridgeService, HelloReply, HelloRequest, BridgeServer} from './proto/bridge'
-import {sendUnaryData, ServerCredentials, ServerUnaryCall, UntypedHandleCall} from '@grpc/grpc-js'
+import {BridgeService} from './proto/bridge'
+import {Bridge} from './bridge'
 import {BridgeErrors} from '../../errors/bridge'
 import BridgeProcessNotManagedByPm2Error = BridgeErrors.BridgeProcessNotManagedByPm2Error
-
-class Bridge implements BridgeServer {
-  sayHello(call: ServerUnaryCall<HelloRequest, HelloReply>, callback: sendUnaryData<HelloReply>): void {
-    callback(null, {message: `Hello ${call.request.name}`})
-  }
-
-  [name: string]: UntypedHandleCall
-}
 
 export class BridgeManager {
   protected server: grpc.Server
@@ -35,7 +27,7 @@ export class BridgeManager {
   listen(): void {
     this.server.addService(BridgeService, new Bridge())
 
-    this.server.bindAsync(`${this.host}:${this.port}`, ServerCredentials.createInsecure(), (error, port) => {
+    this.server.bindAsync(`${this.host}:${this.port}`, grpc.ServerCredentials.createInsecure(), (error, port) => {
       if (error) {
         if (this.daemon) {
           this.sendIpm('error', {

@@ -24,6 +24,7 @@ export default class Test extends Command {
   }
 
   async run() {
+    /*
     process.send?.({
       type: 'process:msg',
       data: {
@@ -38,7 +39,7 @@ export default class Test extends Command {
       data: {
         end: true,
       },
-    })
+    }) */
     // await dockerComposeExec('php', 'php artisan up', true, {stdio: 'inherit'})
     // const git = getGitInstance()
     /* console.log(await git.diffSummary(['tags/v0.0.3',

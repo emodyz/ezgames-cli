@@ -6,17 +6,14 @@ import Pm2ProcessError = Pm2Errors.Pm2ProcessError
 import Pm2RpcError = Pm2Errors.Pm2RpcError
 
 export default class BridgeStart extends Command {
-  static description = 'describe the command here'
+  static description = 'Starts the bridge server'
 
   static flags = {
     help: flags.help({char: 'h'}),
   }
 
-  // static args = [{name: 'file'}]
-
   // TODO: Execute "pm2 install pm2-logrotate" with cli installation
   async run() {
-    // const {args, flags} = this.parse(BridgeStart)
     pm2.connect(function (err) {
       if (err) {
         throw new Pm2DaemonError(err)
