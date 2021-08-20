@@ -3,7 +3,9 @@ import {sendUnaryData, ServerUnaryCall, UntypedHandleCall} from '@grpc/grpc-js'
 
 export class Bridge implements BridgeServer {
   sayHello(call: ServerUnaryCall<HelloRequest, HelloReply>, callback: sendUnaryData<HelloReply>): void {
-    callback(null, {message: `Hello ${call.request.name}`})
+    const msg = `Hello ${call.request.name}`
+    console.log(msg)
+    callback(null, {message: msg})
   }
 
   [name: string]: UntypedHandleCall

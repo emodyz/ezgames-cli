@@ -17,6 +17,8 @@ services:
       - 'ezgames_cli_gpg:/root/.gnupg'
     networks:
       - ezgames
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 networks:
   ezgames:
     driver: bridge

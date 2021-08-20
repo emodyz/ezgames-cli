@@ -14,7 +14,7 @@ export default class BridgeTest extends Command {
   async run() {
     const {args} = this.parse(BridgeTest)
 
-    const client = new BridgeClient('localhost:6660', credentials.createInsecure())
+    const client = new BridgeClient('host.docker.internal:6660', credentials.createInsecure())
 
     client.sayHello({name: args.name}, (err, res) => {
       if (err) {
