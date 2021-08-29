@@ -1,7 +1,7 @@
 {
   "name": "ezgames-cli",
   "description": "EZGames CLI Toolkit",
-  "version": "0.0.8-alpha.3",
+  "version": "0.0.8-alpha.4",
   "author": "Saber Nouira @iWirk",
   "bin": {
     "ezgames": "./bin/run"
@@ -110,7 +110,7 @@
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md",
     "build": "oclif-dev pack --xz",
-    "bridge-build": "sh src/core/bridge/build_protos.sh"
+    "build-bridge": "sh bridge/build_protos.sh"
   },
   "types": "lib/index.d.ts"
 }

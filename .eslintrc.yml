@@ -14,5 +14,6 @@ rules: {
   'semi': [ 'error', 'never' ],
   '@typescript-eslint/ban-ts-ignore': 'off',
   '@typescript-eslint/no-this-alias': 'off',
-  'no-warning-comments': 'off'
+  'no-warning-comments': 'off',
+  'unicorn/no-abusive-eslint-disable': 'off'
 }

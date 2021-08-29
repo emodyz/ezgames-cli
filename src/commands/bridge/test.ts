@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import {BridgeClient} from '../../core/bridge/src/proto/bridge'
+import {BridgeClient} from '../../core/bridge/proto/bridge'
 import {credentials} from '@grpc/grpc-js'
 
 export default class BridgeTest extends Command {

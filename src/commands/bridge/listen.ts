@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import {BridgeManager} from '../../core/bridge/src/bridge-manager'
+import {BridgeManager} from '../../core/bridge/bridge-manager'
 
 export default class BridgeListen extends Command {
   static description = 'Internal command used to bind the grpc bridge server to the pm2 daemon'
