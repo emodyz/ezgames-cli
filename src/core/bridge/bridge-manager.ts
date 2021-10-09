@@ -3,6 +3,8 @@ import {BridgeService} from './proto/bridge'
 import {Bridge} from './bridge'
 import {BridgeErrors} from '../errors/bridge'
 import BridgeProcessNotManagedByPm2Error = BridgeErrors.BridgeProcessNotManagedByPm2Error
+import chalk from 'chalk'
+import {readFileSync} from 'fs-extra'
 
 export class BridgeManager {
   protected server: grpc.Server
@@ -27,7 +29,17 @@ export class BridgeManager {
   listen(): void {
     this.server.addService(BridgeService, new Bridge())
 
-    this.server.bindAsync(`${this.host}:${this.port}`, grpc.ServerCredentials.createInsecure(), (error, port) => {
+    const credentials = grpc.ServerCredentials.createSsl(
+      readFileSync('/Users/wirk/Documents/Work/Emodyz/MultigamingPanel/storage/bridge/ca.pem'),
+      [{
+        private_key: readFileSync('/Users/wirk/Documents/Work/Emodyz/MultigamingPanel/storage/bridge/cert.key'),
+        cert_chain: readFileSync('/Users/wirk/Documents/Work/Emodyz/MultigamingPanel/storage/bridge/cert.crt'),
+      }],
+      true
+    )
+    // const credentials = grpc.ServerCredentials.createInsecure()
+
+    this.server.bindAsync(`${this.host}:${this.port}`, credentials, (error, port) => {
       if (error) {
         if (this.daemon) {
           this.sendIpm('error', {
@@ -43,6 +55,7 @@ export class BridgeManager {
       }
 
       console.log(`Listening on ${port}`)
+      console.log(chalk`{cyan Bridge:} {red.bold Started}`)
       this.server.start()
       if (this.daemon) {
         this.sendIpm('log', {log: `Listening on ${port}`})

@@ -1,6 +1,8 @@
 import {Command, flags} from '@oclif/command'
 import {BridgeManager} from '../../core/bridge/bridge-manager'
 
+const portNum = flags.build<number>({char: 'P', default: 6660, parse: input => parseInt(input, 10)})
+
 export default class BridgeListen extends Command {
   static description = 'Internal command used to bind the grpc bridge server to the pm2 daemon'
 
@@ -9,16 +11,16 @@ export default class BridgeListen extends Command {
   static flags = {
     help: flags.help({char: 'h'}),
     // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
+    host: flags.string({char: 'H', default: 'localhost'}),
+    port: portNum(),
     // flag with no value (-f, --force)
     daemon: flags.boolean({char: 'd', description: ''}),
   }
 
-  // static args = [{name: 'file'}]
-
   async run() {
     const {flags} = this.parse(BridgeListen)
-    const bridge = new BridgeManager('localhost', 6660, false, flags.daemon)
+    flags.port = flags.port ? flags.port : 6660
+    const bridge = new BridgeManager(flags.host, flags.port, false, flags.daemon)
 
     bridge.listen()
   }

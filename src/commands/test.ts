@@ -1,5 +1,6 @@
 import {Command, flags} from '@oclif/command'
-import {cli} from 'cli-ux'
+import {networkInterfaces} from 'os'
+// import {cli} from 'cli-ux'
 // import EnvUpdater from '../core/env/updater/updater'
 // import {collect} from 'collect.js'
 // import {getGitInfo} from '../core/git'
@@ -24,6 +25,7 @@ export default class Test extends Command {
   }
 
   async run() {
+    console.log(networkInterfaces())
     /*
     process.send?.({
       type: 'process:msg',
