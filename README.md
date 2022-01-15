@@ -19,7 +19,7 @@ $ npm install -g ezgames-cli
 $ ezgames COMMAND
 running command...
 $ ezgames (-v|--version|version)
-ezgames-cli/0.0.8-alpha.7 darwin-x64 node-v16.7.0
+ezgames-cli/0.0.8-alpha.7 darwin-x64 node-v16.8.0
 $ ezgames --help [COMMAND]
 USAGE
   $ ezgames COMMAND
@@ -288,7 +288,7 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.3.1/src/commands/help.ts)_
 
 ## `ezgames install`
 
@@ -342,7 +342,10 @@ update the ezgames CLI
 ```
 USAGE
   $ ezgames update [CHANNEL]
+
+OPTIONS
+  --from-local  interactively choose an already installed version
 ```
 
-_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.10/src/commands/update.ts)_
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.5.0/src/commands/update.ts)_
 <!-- commandsstop -->

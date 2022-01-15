@@ -17,3 +17,9 @@ rules: {
   'no-warning-comments': 'off',
   'unicorn/no-abusive-eslint-disable': 'off'
 }
+settings:
+  import/resolver:
+    typescript: {
+      alwaysTryTypes: true,
+      project: 'tsconfig.json'
+    }
