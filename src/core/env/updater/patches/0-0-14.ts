@@ -1,17 +1,17 @@
 import Patch from './base'
-import {randomBytes} from 'node:crypto'
 
 export default class Patch004 extends Patch {
   readonly restrictions: string = ''
 
-  readonly version: string = '0.0.5'
+  readonly version: string = '0.0.14'
 
   run(env: Record<string, any>): Record<string, any> {
     const patched = env
 
-    patched.EZG_UPDATER_TEST3 = randomBytes(20).toString('hex')
-    patched.test = false
-    delete patched.EZG_UPDATER_TEST
+    patched.BROADCAST_DRIVER = 'pusher'
+    patched.CACHE_DRIVER = 'redis'
+    patched.QUEUE_CONNECTION = 'redis'
+    patched.SESSION_DRIVER = 'redis'
 
     return patched
   }

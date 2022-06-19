@@ -13,6 +13,7 @@ export default class BridgeStart extends Command {
   }
 
   // TODO: Execute "pm2 install pm2-logrotate" with cli installation
+  // TODO: Re
   async run() {
     pm2.connect(function (err) {
       if (err) {

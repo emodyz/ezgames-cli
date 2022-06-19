@@ -45,8 +45,8 @@ export namespace InstallerErrors {
   export class DockerComposeNotFoundError extends Error {
     constructor() {
       const pkgManager = packager()
-      const message = chalk`{yellow.bold Could not find docker-compose on this system.}
-{cyan.bold Please run:} {green.bold ${SYS_COMMANDS[pkgManager.command]} docker-compose}
+      const message = chalk`{yellow.bold Could not find docker compose on this system.}
+{cyan.bold Please run:} {green.bold ${SYS_COMMANDS[pkgManager.command]} docker compose}
 {red.bold Before restarting the installer}`
       super(message)
       this.name = 'InstallerDockerComposeNotFoundError'

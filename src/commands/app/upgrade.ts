@@ -62,6 +62,7 @@ export default class AppUpgrade extends Command {
 
     const rebuildFront = await this.shouldRebuildFront(upgradeTarget)
     const rebuildContainers = await this.shouldRebuildContainers(upgradeTarget)
+    // TODO: Add should restart bridge!
 
     if (flags.maintenance) {
       await dockerComposeExec('php', 'php artisan down', true, {stdio: 'inherit'})
@@ -82,7 +83,7 @@ export default class AppUpgrade extends Command {
 
     this.log(chalk`{yellow.bold Waiting for startup completion... (this will take a few minutes)}`)
 
-    await cli.wait(60000)
+    await cli.wait(60_000)
     await dockerComposeExec('php', 'php artisan up', true, {stdio: 'inherit'})
     await waitForHealthyApp()
 

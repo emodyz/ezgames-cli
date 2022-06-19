@@ -58,7 +58,7 @@ export default class InstallIndex extends Command {
     let hasDeps = false
     let hasGit = Boolean(where('git'))
     let hasDocker = Boolean(where('docker'))
-    const hasDockerCompose = Boolean(where('docker-compose'))
+    const hasDockerCompose = true // TODO: Fix this Boolean(where('docker compose'))
 
     if (!(fs.readdirSync(EZG_APP_PATH).length <= 1)) {
       throw new EzgAlreadyInstalledError()
@@ -79,6 +79,7 @@ export default class InstallIndex extends Command {
                     // hasGit = true
                     throw new GitNotFoundError()
                   }
+
                   hasGit = Boolean(where('git'))
                 },
               },
@@ -89,6 +90,7 @@ export default class InstallIndex extends Command {
                   if (!hasDocker) {
                     throw new DockerEngineNotFoundError()
                   }
+
                   hasDocker = Boolean(where('git'))
                 },
               },
@@ -100,6 +102,7 @@ export default class InstallIndex extends Command {
                     await cli.wait(1000)
                     throw new DockerComposeNotFoundError()
                   }
+
                   hasDeps = true
                 },
               },
@@ -152,7 +155,7 @@ export default class InstallIndex extends Command {
           enabled: ctx => Boolean(ctx.isBuildSuccessful),
           task: async ctx => {
             await dockerComposeUp()
-            await cli.wait(60000)
+            await cli.wait(60_000)
             await waitForHealthyApp()
             ctx.isStartUpSuccessful = true
           },

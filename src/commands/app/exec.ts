@@ -2,7 +2,7 @@ import {Command, flags} from '@oclif/command'
 import {dockerComposeExec} from '../../core/docker/compose-exec'
 
 export default class AppExec extends Command {
-  static description = 'Executes the provided command inside the targeted docker-compose service'
+  static description = 'Executes the provided command inside the targeted docker compose service'
 
   static aliases = ['exec']
 
@@ -13,7 +13,7 @@ export default class AppExec extends Command {
   static args = [
     {
       name: 'target',
-      description: 'The name of the docker-compose service inside which the command is to be executed.',
+      description: 'The name of the docker compose service inside which the command is to be executed.',
       required: true,
     },
     {
