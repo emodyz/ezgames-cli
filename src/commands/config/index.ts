@@ -3,7 +3,7 @@ import {prompt} from 'enquirer'
 import validator from 'validator'
 import {TaskWrapper} from 'listr2/dist/lib/task-wrapper'
 import {ListrContext as Ctx} from 'listr2/dist/interfaces/listr.interface'
-import {isIPv4} from 'net'
+import {isIPv4} from 'node:net'
 import {saveFullConfigToEnv} from '../../core/env/env'
 
 export async function configureAppForm(task?: TaskWrapper<Ctx, any>) {
@@ -70,6 +70,7 @@ export default class ConfigIndex extends Command {
       await saveFullConfigToEnv({name: flags.name, domain: flags.domain, wmEmail: flags.email})
       this.exit(0)
     }
+
     await saveFullConfigToEnv(await configureAppForm())
   }
 }

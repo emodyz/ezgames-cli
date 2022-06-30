@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import XDGAppPaths from 'xdg-app-paths'
 import fs from 'fs-extra'
 // eslint-disable-next-line new-cap

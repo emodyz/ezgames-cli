@@ -1,5 +1,5 @@
 import axios from 'axios'
-import https from 'https'
+import https from 'node:https'
 import {getAppEnv} from '../env/env'
 import * as rax from 'retry-axios'
 import {ApiErrors} from '../errors/api'

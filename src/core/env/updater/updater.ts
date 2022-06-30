@@ -26,6 +26,7 @@ export default class EnvUpdater {
         return semver.gt(item.version, this.currentVersion) && semver.lte(item.version, this.targetVersion)
       })
     }
+
     return manifest.filter(item => {
       // TODO: Switch to this condition before release when strict semver compliance is enforced
       // return major(item.version).toString() <= major(this.targetVersion).toString()

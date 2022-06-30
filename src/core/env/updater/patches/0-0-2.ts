@@ -1,5 +1,5 @@
 import Patch from './base'
-import {randomBytes} from 'crypto'
+import {randomBytes} from 'node:crypto'
 
 export default class Patch004 extends Patch {
   readonly restrictions: string = ''

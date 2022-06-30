@@ -1,7 +1,7 @@
 import {Command, flags} from '@oclif/command'
 import {BridgeManager} from '../../core/bridge/bridge-manager'
 
-const portNum = flags.build<number>({char: 'P', default: 6660, parse: input => parseInt(input, 10)})
+const portNum = flags.build<number>({char: 'P', default: 6660, parse: input => Number.parseInt(input, 10)})
 
 export default class BridgeListen extends Command {
   static description = 'Internal command used to bind the grpc bridge server to the pm2 daemon'

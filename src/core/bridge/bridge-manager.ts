@@ -5,6 +5,8 @@ import {BridgeErrors} from '../errors/bridge'
 import BridgeProcessNotManagedByPm2Error = BridgeErrors.BridgeProcessNotManagedByPm2Error
 import chalk from 'chalk'
 import {readFileSync} from 'fs-extra'
+import path from 'node:path'
+import {EZG_APP_PATH} from '../paths'
 
 export class BridgeManager {
   protected server: grpc.Server
@@ -30,12 +32,12 @@ export class BridgeManager {
     this.server.addService(BridgeService, new Bridge())
 
     const credentials = grpc.ServerCredentials.createSsl(
-      readFileSync('/Users/wirk/Documents/Work/Emodyz/MultigamingPanel/storage/bridge/ca.pem'),
+      readFileSync(path.join(EZG_APP_PATH, 'storage/bridge/ca.pem')),
       [{
-        private_key: readFileSync('/Users/wirk/Documents/Work/Emodyz/MultigamingPanel/storage/bridge/cert.key'),
-        cert_chain: readFileSync('/Users/wirk/Documents/Work/Emodyz/MultigamingPanel/storage/bridge/cert.crt'),
+        private_key: readFileSync(path.join(EZG_APP_PATH, 'storage/bridge/cert.key')),
+        cert_chain: readFileSync(path.join(EZG_APP_PATH, 'storage/bridge/cert.crt')),
       }],
-      true
+      true,
     )
     // const credentials = grpc.ServerCredentials.createInsecure()
 
@@ -68,6 +70,7 @@ export class BridgeManager {
     if (!this.daemon) {
       throw new BridgeProcessNotManagedByPm2Error('BridgeManager.sendIpm()')
     }
+
     process.send?.({
       type: `process:${type}`,
       data: data,

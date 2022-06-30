@@ -13,7 +13,7 @@ export default class BuildFront extends Command {
     await BuildFront.build(true, 'inherit')
   }
 
-  static async build(tty = true, stdio: stdIo = 'pipe',) {
+  static async build(tty = true, stdio: stdIo = 'pipe') {
     return dockerComposeExec('php', 'yarn run production', tty, {stdio: stdio})
   }
 }

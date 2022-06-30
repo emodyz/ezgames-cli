@@ -20,6 +20,7 @@ export default class BridgeTest extends Command {
       if (err) {
         throw new Error(err.message)
       }
+
       this.log(res.message)
     })
   }

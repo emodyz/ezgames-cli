@@ -36,6 +36,7 @@ export async function getGitInfo(cwd = EZG_APP_PATH): Promise<GitInfoBasic> {
     repoStatus.current = current
     repoStatus.isTag = false
   }
+
   repoStatus.current = repoStatus.current.replace(/(\r\n|\n|\r)/gm, '')
 
   /**

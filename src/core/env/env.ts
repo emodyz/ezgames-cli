@@ -2,11 +2,11 @@ import {parse as parseEnv, stringify as stringifyEnv} from 'envfile'
 import {readFileSync, writeFile} from 'fs-extra'
 import {EZG_APP_ENV_EXAMPLE_PATH, EZG_APP_ENV_PATH} from '../paths'
 import validator from 'validator'
-import {randomBytes} from 'crypto'
+import {randomBytes} from 'node:crypto'
 import {Range as SemverRange} from 'semver'
 import EnvUpdater from './updater/updater'
 import {getGitInfo} from '../git'
-import {writeFileSync} from 'fs'
+import {writeFileSync} from 'node:fs'
 
 export function getAppEnv(example = false): any {
   return parseEnv(readFileSync(example ? EZG_APP_ENV_EXAMPLE_PATH : EZG_APP_ENV_PATH, 'utf-8'))

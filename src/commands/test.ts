@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import {networkInterfaces} from 'os'
+import {networkInterfaces} from 'node:os'
 // import {cli} from 'cli-ux'
 // import EnvUpdater from '../core/env/updater/updater'
 // import {collect} from 'collect.js'
