@@ -19,7 +19,7 @@ $ npm install -g ezgames-cli
 $ ezgames COMMAND
 running command...
 $ ezgames (-v|--version|version)
-ezgames-cli/0.0.8-alpha.13 darwin-x64 node-v18.4.0
+ezgames-cli/0.0.8-alpha.14 darwin-x64 node-v18.4.0
 $ ezgames --help [COMMAND]
 USAGE
   $ ezgames COMMAND
@@ -35,6 +35,7 @@ USAGE
 * [`ezgames app:stop`](#ezgames-appstop)
 * [`ezgames app:upgrade`](#ezgames-appupgrade)
 * [`ezgames autocomplete [SHELL]`](#ezgames-autocomplete-shell)
+* [`ezgames bridge:setup [FILE]`](#ezgames-bridgesetup-file)
 * [`ezgames bridge:start`](#ezgames-bridgestart)
 * [`ezgames bridge:stop`](#ezgames-bridgestop)
 * [`ezgames bridge:test NAME`](#ezgames-bridgetest-name)
@@ -66,7 +67,7 @@ ALIASES
   $ ezgames exec
 ```
 
-_See code: [src/commands/app/exec.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/app/exec.ts)_
+_See code: [src/commands/app/exec.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/app/exec.ts)_
 
 ## `ezgames app:restart`
 
@@ -83,7 +84,7 @@ ALIASES
   $ ezgames restart
 ```
 
-_See code: [src/commands/app/restart.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/app/restart.ts)_
+_See code: [src/commands/app/restart.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/app/restart.ts)_
 
 ## `ezgames app:start`
 
@@ -101,7 +102,7 @@ ALIASES
   $ ezgames up
 ```
 
-_See code: [src/commands/app/start.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/app/start.ts)_
+_See code: [src/commands/app/start.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/app/start.ts)_
 
 ## `ezgames app:status`
 
@@ -118,7 +119,7 @@ ALIASES
   $ ezgames status
 ```
 
-_See code: [src/commands/app/status.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/app/status.ts)_
+_See code: [src/commands/app/status.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/app/status.ts)_
 
 ## `ezgames app:stop`
 
@@ -136,11 +137,11 @@ ALIASES
   $ ezgames down
 ```
 
-_See code: [src/commands/app/stop.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/app/stop.ts)_
+_See code: [src/commands/app/stop.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/app/stop.ts)_
 
 ## `ezgames app:upgrade`
 
-EZGames Updater
+[35m[1mEZGames[22m[39m [36mUpdater[39m
 
 ```
 USAGE
@@ -157,7 +158,7 @@ ALIASES
   $ ezgames upgrade
 ```
 
-_See code: [src/commands/app/upgrade.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/app/upgrade.ts)_
+_See code: [src/commands/app/upgrade.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/app/upgrade.ts)_
 
 ## `ezgames autocomplete [SHELL]`
 
@@ -182,6 +183,22 @@ EXAMPLES
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v0.3.0/src/commands/autocomplete/index.ts)_
 
+## `ezgames bridge:setup [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ ezgames bridge:setup [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/bridge/setup.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/bridge/setup.ts)_
+
 ## `ezgames bridge:start`
 
 Starts the bridge server
@@ -196,7 +213,7 @@ OPTIONS
   -h, --help       show CLI help
 ```
 
-_See code: [src/commands/bridge/start.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/bridge/start.ts)_
+_See code: [src/commands/bridge/start.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/bridge/start.ts)_
 
 ## `ezgames bridge:stop`
 
@@ -210,7 +227,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/bridge/stop.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/bridge/stop.ts)_
+_See code: [src/commands/bridge/stop.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/bridge/stop.ts)_
 
 ## `ezgames bridge:test NAME`
 
@@ -224,7 +241,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/bridge/test.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/bridge/test.ts)_
+_See code: [src/commands/bridge/test.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/bridge/test.ts)_
 
 ## `ezgames build:front`
 
@@ -238,7 +255,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/build/front.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/build/front.ts)_
+_See code: [src/commands/build/front.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/build/front.ts)_
 
 ## `ezgames config`
 
@@ -255,7 +272,7 @@ OPTIONS
   -n, --name=name      Community Name
 ```
 
-_See code: [src/commands/config/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/config/index.ts)_
+_See code: [src/commands/config/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/config/index.ts)_
 
 ## `ezgames create:user`
 
@@ -273,7 +290,7 @@ OPTIONS
   -r, --role=role          Role to be assigned to the future user
 ```
 
-_See code: [src/commands/create/user.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/create/user.ts)_
+_See code: [src/commands/create/user.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/create/user.ts)_
 
 ## `ezgames help [COMMAND]`
 
@@ -294,7 +311,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.3.1
 
 ## `ezgames install`
 
-EZGames Installer
+[35m[1mEZGames[22m[39m [36mInstaller[39m
 
 ```
 USAGE
@@ -305,7 +322,7 @@ OPTIONS
   -r, --release=release  GitHub Release Tag
 ```
 
-_See code: [src/commands/install/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/install/index.ts)_
+_See code: [src/commands/install/index.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/install/index.ts)_
 
 ## `ezgames ssl:sign [FILE]`
 
@@ -321,7 +338,7 @@ OPTIONS
   -n, --name=name  name to print
 ```
 
-_See code: [src/commands/ssl/sign.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/ssl/sign.ts)_
+_See code: [src/commands/ssl/sign.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/ssl/sign.ts)_
 
 ## `ezgames test`
 
@@ -335,7 +352,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/test.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.13/src/commands/test.ts)_
+_See code: [src/commands/test.ts](https://github.com/ezmodyz/ezgames-cli/blob/v0.0.8-alpha.14/src/commands/test.ts)_
 
 ## `ezgames update [CHANNEL]`
 
