@@ -16,6 +16,7 @@ import cli from 'cli-ux'
 import {waitForHealthyApp} from '../../core/api/status'
 import {UpdaterErrors} from '../../core/errors/updater'
 import UnsupportedCurrentVersionError = UpdaterErrors.UnsupportedCurrentVersionError
+import {phpArtisan} from '../../core/docker/php/artisan'
 
 export default class AppUpgrade extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Updater}`
@@ -90,6 +91,8 @@ export default class AppUpgrade extends Command {
     if (rebuildFront) {
       await BuildFront.build(true, 'inherit')
     }
+
+    await phpArtisan('storage:link', true)
 
     this.log(chalk`{green.bold Update} {cyan ${upgradeTarget}} {green.bold has been installed successfully!}`)
   }

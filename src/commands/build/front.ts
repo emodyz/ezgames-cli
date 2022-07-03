@@ -1,6 +1,6 @@
 import {Command, flags} from '@oclif/command'
 import {dockerComposeExec} from '../../core/docker/compose-exec'
-import {stdIo} from '../../types/execa'
+import {stdIo} from '../../types/execa.d'
 
 export default class BuildFront extends Command {
   static description = '(Re)Build EZGames\'s FontEnd Application'

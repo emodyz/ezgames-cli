@@ -166,6 +166,7 @@ export default class InstallIndex extends Command {
           task: async ctx => {
             // TODO: Wait for https://github.com/cenk1cenk2/listr2/issues/368 ???
             await BuildFront.build(true)
+            await phpArtisan('storage:link', true)
             ctx.isFrontEndBuildSuccessful = true
           },
         },
