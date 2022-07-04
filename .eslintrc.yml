@@ -15,7 +15,8 @@ rules: {
   '@typescript-eslint/ban-ts-ignore': 'off',
   '@typescript-eslint/no-this-alias': 'off',
   'no-warning-comments': 'off',
-  'unicorn/no-abusive-eslint-disable': 'off'
+  'unicorn/no-abusive-eslint-disable': 'off',
+  'default-param-last': 'off'
 }
 settings:
   import/resolver:

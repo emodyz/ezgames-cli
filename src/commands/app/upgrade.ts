@@ -87,7 +87,6 @@ export default class AppUpgrade extends Command {
     await cli.wait(60_000)
     await dockerComposeExec('php', 'php artisan up', true, {stdio: 'inherit'})
     await waitForHealthyApp()
-    await phpArtisan('storage:link', true, 'inherit')
 
     if (rebuildFront) {
       await BuildFront.build(true, 'inherit')

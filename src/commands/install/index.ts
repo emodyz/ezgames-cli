@@ -157,7 +157,6 @@ export default class InstallIndex extends Command {
             await dockerComposeUp()
             await cli.wait(60_000)
             await waitForHealthyApp()
-            await phpArtisan('storage:link', true, 'inherit')
             ctx.isStartUpSuccessful = true
           },
         },

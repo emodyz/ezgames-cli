@@ -1,7 +1,7 @@
 {
   "name": "ezgames-cli",
   "description": "EZGames CLI Toolkit",
-  "version": "0.0.8-alpha.15",
+  "version": "0.0.8-alpha.16",
   "author": "Saber Nouira @iWirk",
   "bin": {
     "ezgames": "./bin/run"
