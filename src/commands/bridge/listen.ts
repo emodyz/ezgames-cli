@@ -11,7 +11,7 @@ export default class BridgeListen extends Command {
   static flags = {
     help: flags.help({char: 'h'}),
     // flag with a value (-n, --name=VALUE)
-    host: flags.string({char: 'H', default: 'localhost'}),
+    host: flags.string({char: 'H', default: '0.0.0.0'}),
     port: portNum(),
     // flag with no value (-f, --force)
     daemon: flags.boolean({char: 'd', description: ''}),

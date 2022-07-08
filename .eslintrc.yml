@@ -17,6 +17,7 @@ rules: {
   'no-warning-comments': 'off',
   'unicorn/no-abusive-eslint-disable': 'off',
   'default-param-last': 'off'
+  '@typescript-eslint/ban-ts-comment': 'off',
 }
 settings:
   import/resolver:

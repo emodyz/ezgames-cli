@@ -1,6 +1,7 @@
 import {Command, flags} from '@oclif/command'
 import {stdIo} from '../../types/execa.d'
 import {dockerComposeExecCwd} from '../../core/docker/compose-exec-cwd'
+import chalk from 'chalk'
 
 export default class BridgeSetup extends Command {
   static description = 'Internal command used to setup the grpc bridge server upon first install'
@@ -16,6 +17,8 @@ export default class BridgeSetup extends Command {
     await BridgeSetup.generateKey(true, 'inherit')
     await BridgeSetup.generateRequest(true, 'inherit')
     await BridgeSetup.generateCert(true, 'inherit')
+
+    this.log(chalk`{cyan Bridge:} {green.bold Certificates have been successfully generated!}`)
   }
 
   static async secure(tty = true, stdio: stdIo = 'pipe') {
