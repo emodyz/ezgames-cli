@@ -66,6 +66,7 @@ export class BridgeManager {
     })
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private sendIpm(type: 'msg' | 'log' |'error' | 'endLogs', data: object): void {
     if (!this.daemon) {
       throw new BridgeProcessNotManagedByPm2Error('BridgeManager.sendIpm()')

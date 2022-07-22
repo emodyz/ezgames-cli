@@ -6,6 +6,9 @@ package bridge;
 service Bridge {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+
+  // Get the current version of the control panel
+  rpc GetVersion (GetVersionRequest) returns (GetVersionReply) {}
 }
 
 // The request message containing the user's name.
@@ -16,4 +19,10 @@ message HelloRequest {
 // The response message containing the greetings
 message HelloReply {
   string message = 1;
+}
+
+message GetVersionRequest {}
+
+message GetVersionReply {
+  string version = 1;
 }

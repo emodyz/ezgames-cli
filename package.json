@@ -1,7 +1,7 @@
 {
   "name": "ezgames-cli",
   "description": "EZGames CLI Toolkit",
-  "version": "0.0.8-alpha.17",
+  "version": "0.0.9-alpha.1",
   "author": "Saber Nouira @iWirk",
   "bin": {
     "ezgames": "./bin/run"
@@ -99,9 +99,13 @@
     },
     "update": {
       "s3": {
-        "bucket": "ezg-cli-test-apt-repo",
+        "bucket": "ezg-cli-test",
         "xz": true
       }
+    },
+    "hooks": {
+      "update": "./lib/hooks/update/restart-bridge",
+      "preupdate": "./lib/hooks/preupdate/stop-bridge"
     }
   },
   "repository": "ezmodyz/ezgames-cli",
