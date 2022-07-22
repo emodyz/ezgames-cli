@@ -1,7 +1,7 @@
 {
   "name": "ezgames-cli",
   "description": "EZGames CLI Toolkit",
-  "version": "0.0.9-alpha.1",
+  "version": "0.0.9-alpha.2",
   "author": "Saber Nouira @iWirk",
   "bin": {
     "ezgames": "./bin/run"
@@ -64,7 +64,7 @@
     "eslint-plugin-import": "^2.25.4",
     "globby": "^10",
     "grpc-tools": "^1.11.2",
-    "grpc_tools_node_protoc_ts": "^5.3.1",
+    "grpc_tools_node_protoc_ts": "^5.3.2",
     "mocha": "^5",
     "nyc": "^14",
     "ts-node": "^8",
@@ -100,6 +100,7 @@
     "update": {
       "s3": {
         "bucket": "ezg-cli-test",
+        "host": "ewr1.vultrobjects.com",
         "xz": true
       }
     },
