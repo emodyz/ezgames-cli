@@ -20,7 +20,7 @@ yarn run grpc_tools_node_protoc \
     "${BASE_DIR}"/proto/*.proto
 
 # PHP code generation
-protoc --plugin=protoc-gen-grpc="${BASE_DIR}"/grpc_php_plugin\
+protoc --plugin=protoc-gen-grpc="${BASE_DIR}"/grpc_php_plugin_new\
        --php_out="${PHP_DIR}" \
        --grpc_out=generate_server:"${PHP_DIR}" \
        -I "${BASE_DIR}"/proto \
