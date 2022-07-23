@@ -33,6 +33,7 @@ import DockerComposeNotFoundError = InstallerErrors.DockerComposeNotFoundError
 import EzgNoSupportedVersionAvailableError = InstallerErrors.EzgNoSupportedVersionAvailableError
 import BridgeSetup from '../bridge/setup'
 import BridgeStart from '../bridge/start'
+import {getDefaultExecaOptions} from '../../core/defaults'
 
 export default class InstallIndex extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Installer}`
@@ -220,7 +221,7 @@ export default class InstallIndex extends Command {
     this.log(' ')
     this.log(chalk.cyan`{green ${checkMark}} {cyan.bold EZGames} {green ${requestedReleaseTag}} is now {green.bold available} at {cyan.bold.underline ${getAppEnv().APP_URL}}`)
 
-    await BridgeStart.run()
+    await execa.command('ezgames bridge:start', getDefaultExecaOptions())
 
     // TODO: Add notifications. see: https://oclif.io/docs/notifications
   }
