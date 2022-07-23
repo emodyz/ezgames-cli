@@ -1,7 +1,7 @@
 {
   "name": "ezgames-cli",
   "description": "EZGames CLI Toolkit",
-  "version": "0.0.9-alpha.2",
+  "version": "0.0.9-alpha.6",
   "author": "Saber Nouira @iWirk",
   "bin": {
     "ezgames": "./bin/run"
@@ -100,7 +100,7 @@
     "update": {
       "s3": {
         "bucket": "ezg-cli-test",
-        "host": "ewr1.vultrobjects.com",
+        "host": "https://ewr1.vultrobjects.com/ezg-cli-test",
         "xz": true
       }
     },
