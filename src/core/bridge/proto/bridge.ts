@@ -26,9 +26,15 @@ export interface HelloReply {
   message: string;
 }
 
-export interface GetVersionRequest {}
+export interface CheckForCpUpdateRequest {}
 
-export interface GetVersionReply {
+export interface CheckForCpUpdateReply {
+  target: string;
+}
+
+export interface GetCpVersionRequest {}
+
+export interface GetCpVersionReply {
   version: string;
 }
 
@@ -140,22 +146,25 @@ export const HelloReply = {
   },
 };
 
-function createBaseGetVersionRequest(): GetVersionRequest {
+function createBaseCheckForCpUpdateRequest(): CheckForCpUpdateRequest {
   return {};
 }
 
-export const GetVersionRequest = {
+export const CheckForCpUpdateRequest = {
   encode(
-    _: GetVersionRequest,
+    _: CheckForCpUpdateRequest,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetVersionRequest {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CheckForCpUpdateRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetVersionRequest();
+    const message = createBaseCheckForCpUpdateRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -167,30 +176,131 @@ export const GetVersionRequest = {
     return message;
   },
 
-  fromJSON(_: any): GetVersionRequest {
+  fromJSON(_: any): CheckForCpUpdateRequest {
     return {};
   },
 
-  toJSON(_: GetVersionRequest): unknown {
+  toJSON(_: CheckForCpUpdateRequest): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetVersionRequest>, I>>(
+  fromPartial<I extends Exact<DeepPartial<CheckForCpUpdateRequest>, I>>(
     _: I
-  ): GetVersionRequest {
-    const message = createBaseGetVersionRequest();
+  ): CheckForCpUpdateRequest {
+    const message = createBaseCheckForCpUpdateRequest();
     return message;
   },
 };
 
-function createBaseGetVersionReply(): GetVersionReply {
+function createBaseCheckForCpUpdateReply(): CheckForCpUpdateReply {
+  return { target: "" };
+}
+
+export const CheckForCpUpdateReply = {
+  encode(
+    message: CheckForCpUpdateReply,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.target !== "") {
+      writer.uint32(10).string(message.target);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CheckForCpUpdateReply {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCheckForCpUpdateReply();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.target = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CheckForCpUpdateReply {
+    return {
+      target: isSet(object.target) ? String(object.target) : "",
+    };
+  },
+
+  toJSON(message: CheckForCpUpdateReply): unknown {
+    const obj: any = {};
+    message.target !== undefined && (obj.target = message.target);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CheckForCpUpdateReply>, I>>(
+    object: I
+  ): CheckForCpUpdateReply {
+    const message = createBaseCheckForCpUpdateReply();
+    message.target = object.target ?? "";
+    return message;
+  },
+};
+
+function createBaseGetCpVersionRequest(): GetCpVersionRequest {
+  return {};
+}
+
+export const GetCpVersionRequest = {
+  encode(
+    _: GetCpVersionRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetCpVersionRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetCpVersionRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): GetCpVersionRequest {
+    return {};
+  },
+
+  toJSON(_: GetCpVersionRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<GetCpVersionRequest>, I>>(
+    _: I
+  ): GetCpVersionRequest {
+    const message = createBaseGetCpVersionRequest();
+    return message;
+  },
+};
+
+function createBaseGetCpVersionReply(): GetCpVersionReply {
   return { version: "" };
 }
 
-export const GetVersionReply = {
+export const GetCpVersionReply = {
   encode(
-    message: GetVersionReply,
+    message: GetCpVersionReply,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
     if (message.version !== "") {
@@ -199,10 +309,10 @@ export const GetVersionReply = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetVersionReply {
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetCpVersionReply {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetVersionReply();
+    const message = createBaseGetCpVersionReply();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -217,22 +327,22 @@ export const GetVersionReply = {
     return message;
   },
 
-  fromJSON(object: any): GetVersionReply {
+  fromJSON(object: any): GetCpVersionReply {
     return {
       version: isSet(object.version) ? String(object.version) : "",
     };
   },
 
-  toJSON(message: GetVersionReply): unknown {
+  toJSON(message: GetCpVersionReply): unknown {
     const obj: any = {};
     message.version !== undefined && (obj.version = message.version);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetVersionReply>, I>>(
+  fromPartial<I extends Exact<DeepPartial<GetCpVersionReply>, I>>(
     object: I
-  ): GetVersionReply {
-    const message = createBaseGetVersionReply();
+  ): GetCpVersionReply {
+    const message = createBaseGetCpVersionReply();
     message.version = object.version ?? "";
     return message;
   },
@@ -253,16 +363,28 @@ export const BridgeService = {
     responseDeserialize: (value: Buffer) => HelloReply.decode(value),
   },
   /** Get the current version of the control panel */
-  getVersion: {
-    path: "/bridge.Bridge/GetVersion",
+  getCpVersion: {
+    path: "/bridge.Bridge/GetCpVersion",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: GetVersionRequest) =>
-      Buffer.from(GetVersionRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => GetVersionRequest.decode(value),
-    responseSerialize: (value: GetVersionReply) =>
-      Buffer.from(GetVersionReply.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => GetVersionReply.decode(value),
+    requestSerialize: (value: GetCpVersionRequest) =>
+      Buffer.from(GetCpVersionRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => GetCpVersionRequest.decode(value),
+    responseSerialize: (value: GetCpVersionReply) =>
+      Buffer.from(GetCpVersionReply.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => GetCpVersionReply.decode(value),
+  },
+  checkForCpUpdate: {
+    path: "/bridge.Bridge/CheckForCpUpdate",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: CheckForCpUpdateRequest) =>
+      Buffer.from(CheckForCpUpdateRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) =>
+      CheckForCpUpdateRequest.decode(value),
+    responseSerialize: (value: CheckForCpUpdateReply) =>
+      Buffer.from(CheckForCpUpdateReply.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => CheckForCpUpdateReply.decode(value),
   },
 } as const;
 
@@ -270,7 +392,11 @@ export interface BridgeServer extends UntypedServiceImplementation {
   /** Sends a greeting */
   sayHello: handleUnaryCall<HelloRequest, HelloReply>;
   /** Get the current version of the control panel */
-  getVersion: handleUnaryCall<GetVersionRequest, GetVersionReply>;
+  getCpVersion: handleUnaryCall<GetCpVersionRequest, GetCpVersionReply>;
+  checkForCpUpdate: handleUnaryCall<
+    CheckForCpUpdateRequest,
+    CheckForCpUpdateReply
+  >;
 }
 
 export interface BridgeClient extends Client {
@@ -291,20 +417,44 @@ export interface BridgeClient extends Client {
     callback: (error: ServiceError | null, response: HelloReply) => void
   ): ClientUnaryCall;
   /** Get the current version of the control panel */
-  getVersion(
-    request: GetVersionRequest,
-    callback: (error: ServiceError | null, response: GetVersionReply) => void
+  getCpVersion(
+    request: GetCpVersionRequest,
+    callback: (error: ServiceError | null, response: GetCpVersionReply) => void
   ): ClientUnaryCall;
-  getVersion(
-    request: GetVersionRequest,
+  getCpVersion(
+    request: GetCpVersionRequest,
     metadata: Metadata,
-    callback: (error: ServiceError | null, response: GetVersionReply) => void
+    callback: (error: ServiceError | null, response: GetCpVersionReply) => void
   ): ClientUnaryCall;
-  getVersion(
-    request: GetVersionRequest,
+  getCpVersion(
+    request: GetCpVersionRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: GetVersionReply) => void
+    callback: (error: ServiceError | null, response: GetCpVersionReply) => void
+  ): ClientUnaryCall;
+  checkForCpUpdate(
+    request: CheckForCpUpdateRequest,
+    callback: (
+      error: ServiceError | null,
+      response: CheckForCpUpdateReply
+    ) => void
+  ): ClientUnaryCall;
+  checkForCpUpdate(
+    request: CheckForCpUpdateRequest,
+    metadata: Metadata,
+    callback: (
+      error: ServiceError | null,
+      response: CheckForCpUpdateReply
+    ) => void
+  ): ClientUnaryCall;
+  checkForCpUpdate(
+    request: CheckForCpUpdateRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (
+      error: ServiceError | null,
+      response: CheckForCpUpdateReply
+    ) => void
   ): ClientUnaryCall;
 }
 

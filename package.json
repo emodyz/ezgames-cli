@@ -1,7 +1,7 @@
 {
   "name": "ezgames-cli",
   "description": "EZGames CLI Toolkit",
-  "version": "0.0.9-alpha.7",
+  "version": "0.0.9-alpha.9",
   "author": "Saber Nouira @iWirk",
   "bin": {
     "ezgames": "./bin/run"
@@ -103,10 +103,6 @@
         "host": "https://ewr1.vultrobjects.com/ezg-cli-test",
         "xz": true
       }
-    },
-    "hooks": {
-      "update": "./lib/hooks/update/restart-bridge",
-      "preupdate": "./lib/hooks/preupdate/stop-bridge"
     }
   },
   "repository": "ezmodyz/ezgames-cli",

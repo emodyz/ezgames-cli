@@ -8,7 +8,9 @@ service Bridge {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
 
   // Get the current version of the control panel
-  rpc GetVersion (GetVersionRequest) returns (GetVersionReply) {}
+  rpc GetCpVersion (GetCpVersionRequest) returns (GetCpVersionReply) {}
+
+  rpc CheckForCpUpdate (CheckForCpUpdateRequest) returns (CheckForCpUpdateReply) {}
 }
 
 // The request message containing the user's name.
@@ -21,8 +23,14 @@ message HelloReply {
   string message = 1;
 }
 
-message GetVersionRequest {}
+message CheckForCpUpdateRequest {}
 
-message GetVersionReply {
+message CheckForCpUpdateReply {
+  string target = 1;
+}
+
+message GetCpVersionRequest {}
+
+message GetCpVersionReply {
   string version = 1;
 }

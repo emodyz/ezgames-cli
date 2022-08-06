@@ -5,7 +5,7 @@ import {gitHubApi} from '../../core/github'
 import collect, {Collection} from 'collect.js'
 import semver from 'semver'
 import {savePatchedEnv, supportedVersions} from '../../core/env/env'
-import /* Enquirer, */ {prompt} from 'enquirer'
+import {prompt} from 'enquirer'
 // import ChoiceOptions = Enquirer.prompt.FormQuestion.ChoiceOptions
 import {dockerComposeExec} from '../../core/docker/compose-exec'
 import {dockerComposeDown} from '../../core/docker/compose-down'
@@ -16,7 +16,6 @@ import cli from 'cli-ux'
 import {waitForHealthyApp} from '../../core/api/status'
 import {UpdaterErrors} from '../../core/errors/updater'
 import UnsupportedCurrentVersionError = UpdaterErrors.UnsupportedCurrentVersionError
-import {phpArtisan} from '../../core/docker/php/artisan'
 
 export default class AppUpgrade extends Command {
   static description = chalk`{magenta.bold EZGames} {cyan Updater}`
@@ -135,7 +134,7 @@ export default class AppUpgrade extends Command {
     return prompt(form)
   }
 
-  async getRelevantChoices(gitInfo: GitInfoBasic, flags: Record<any, any>): Promise<FormChoiceOptions[]> {
+  static async getUpgradeTargets(gitInfo: GitInfoBasic, allowPre: boolean): Promise<Collection<any>> {
     const releases = collect((await gitHubApi('GET /repos/{owner}/{repo}/releases', {
       owner: 'emodyz',
       repo: 'MultigamingPanel',
@@ -145,10 +144,14 @@ export default class AppUpgrade extends Command {
       return semver.satisfies(value.tag_name, supportedVersions) && semver.gt(value.tag_name, gitInfo.current)
     })
 
-    const availableReleases = supportedReleases.filter((value: any) => {
+    return supportedReleases.filter((value: any) => {
       // eslint-disable-next-line no-negated-condition
-      return !flags['allow-pre-releases'] ? !value.prerelease : true
+      return !allowPre ? !value.prerelease : true
     })
+  }
+
+  async getRelevantChoices(gitInfo: GitInfoBasic, flags: Record<any, any>): Promise<FormChoiceOptions[]> {
+    const availableReleases = await AppUpgrade.getUpgradeTargets(gitInfo, flags['allow-pre-releases'])
 
     if (availableReleases.isEmpty()) {
       //

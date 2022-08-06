@@ -4,26 +4,48 @@
 var grpc = require('@grpc/grpc-js');
 var bridge_pb = require('./bridge_pb.js');
 
-function serialize_bridge_GetVersionReply(arg) {
-  if (!(arg instanceof bridge_pb.GetVersionReply)) {
-    throw new Error('Expected argument of type bridge.GetVersionReply');
+function serialize_bridge_CheckForCpUpdateReply(arg) {
+  if (!(arg instanceof bridge_pb.CheckForCpUpdateReply)) {
+    throw new Error('Expected argument of type bridge.CheckForCpUpdateReply');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_bridge_GetVersionReply(buffer_arg) {
-  return bridge_pb.GetVersionReply.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_bridge_CheckForCpUpdateReply(buffer_arg) {
+  return bridge_pb.CheckForCpUpdateReply.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_bridge_GetVersionRequest(arg) {
-  if (!(arg instanceof bridge_pb.GetVersionRequest)) {
-    throw new Error('Expected argument of type bridge.GetVersionRequest');
+function serialize_bridge_CheckForCpUpdateRequest(arg) {
+  if (!(arg instanceof bridge_pb.CheckForCpUpdateRequest)) {
+    throw new Error('Expected argument of type bridge.CheckForCpUpdateRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_bridge_GetVersionRequest(buffer_arg) {
-  return bridge_pb.GetVersionRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_bridge_CheckForCpUpdateRequest(buffer_arg) {
+  return bridge_pb.CheckForCpUpdateRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bridge_GetCpVersionReply(arg) {
+  if (!(arg instanceof bridge_pb.GetCpVersionReply)) {
+    throw new Error('Expected argument of type bridge.GetCpVersionReply');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bridge_GetCpVersionReply(buffer_arg) {
+  return bridge_pb.GetCpVersionReply.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_bridge_GetCpVersionRequest(arg) {
+  if (!(arg instanceof bridge_pb.GetCpVersionRequest)) {
+    throw new Error('Expected argument of type bridge.GetCpVersionRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bridge_GetCpVersionRequest(buffer_arg) {
+  return bridge_pb.GetCpVersionRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_bridge_HelloReply(arg) {
@@ -64,16 +86,27 @@ sayHello: {
     responseDeserialize: deserialize_bridge_HelloReply,
   },
   // Get the current version of the control panel
-getVersion: {
-    path: '/bridge.Bridge/GetVersion',
+getCpVersion: {
+    path: '/bridge.Bridge/GetCpVersion',
     requestStream: false,
     responseStream: false,
-    requestType: bridge_pb.GetVersionRequest,
-    responseType: bridge_pb.GetVersionReply,
-    requestSerialize: serialize_bridge_GetVersionRequest,
-    requestDeserialize: deserialize_bridge_GetVersionRequest,
-    responseSerialize: serialize_bridge_GetVersionReply,
-    responseDeserialize: deserialize_bridge_GetVersionReply,
+    requestType: bridge_pb.GetCpVersionRequest,
+    responseType: bridge_pb.GetCpVersionReply,
+    requestSerialize: serialize_bridge_GetCpVersionRequest,
+    requestDeserialize: deserialize_bridge_GetCpVersionRequest,
+    responseSerialize: serialize_bridge_GetCpVersionReply,
+    responseDeserialize: deserialize_bridge_GetCpVersionReply,
+  },
+  checkForCpUpdate: {
+    path: '/bridge.Bridge/CheckForCpUpdate',
+    requestStream: false,
+    responseStream: false,
+    requestType: bridge_pb.CheckForCpUpdateRequest,
+    responseType: bridge_pb.CheckForCpUpdateReply,
+    requestSerialize: serialize_bridge_CheckForCpUpdateRequest,
+    requestDeserialize: deserialize_bridge_CheckForCpUpdateRequest,
+    responseSerialize: serialize_bridge_CheckForCpUpdateReply,
+    responseDeserialize: deserialize_bridge_CheckForCpUpdateReply,
   },
 };
 
