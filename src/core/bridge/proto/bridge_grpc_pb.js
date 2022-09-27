@@ -15,15 +15,15 @@ function deserialize_bridge_CheckForCpUpdateReply(buffer_arg) {
   return bridge_pb.CheckForCpUpdateReply.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_bridge_CheckForCpUpdateRequest(arg) {
-  if (!(arg instanceof bridge_pb.CheckForCpUpdateRequest)) {
-    throw new Error('Expected argument of type bridge.CheckForCpUpdateRequest');
+function serialize_bridge_EmptyMessage(arg) {
+  if (!(arg instanceof bridge_pb.EmptyMessage)) {
+    throw new Error('Expected argument of type bridge.EmptyMessage');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_bridge_CheckForCpUpdateRequest(buffer_arg) {
-  return bridge_pb.CheckForCpUpdateRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_bridge_EmptyMessage(buffer_arg) {
+  return bridge_pb.EmptyMessage.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_bridge_GetCpVersionReply(arg) {
@@ -35,17 +35,6 @@ function serialize_bridge_GetCpVersionReply(arg) {
 
 function deserialize_bridge_GetCpVersionReply(buffer_arg) {
   return bridge_pb.GetCpVersionReply.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_bridge_GetCpVersionRequest(arg) {
-  if (!(arg instanceof bridge_pb.GetCpVersionRequest)) {
-    throw new Error('Expected argument of type bridge.GetCpVersionRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_bridge_GetCpVersionRequest(buffer_arg) {
-  return bridge_pb.GetCpVersionRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_bridge_HelloReply(arg) {
@@ -70,6 +59,17 @@ function deserialize_bridge_HelloRequest(buffer_arg) {
   return bridge_pb.HelloRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_bridge_UpgradeCpRequest(arg) {
+  if (!(arg instanceof bridge_pb.UpgradeCpRequest)) {
+    throw new Error('Expected argument of type bridge.UpgradeCpRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_bridge_UpgradeCpRequest(buffer_arg) {
+  return bridge_pb.UpgradeCpRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 
 // The greeting service definition.
 var BridgeService = exports.BridgeService = {
@@ -90,10 +90,10 @@ getCpVersion: {
     path: '/bridge.Bridge/GetCpVersion',
     requestStream: false,
     responseStream: false,
-    requestType: bridge_pb.GetCpVersionRequest,
+    requestType: bridge_pb.EmptyMessage,
     responseType: bridge_pb.GetCpVersionReply,
-    requestSerialize: serialize_bridge_GetCpVersionRequest,
-    requestDeserialize: deserialize_bridge_GetCpVersionRequest,
+    requestSerialize: serialize_bridge_EmptyMessage,
+    requestDeserialize: deserialize_bridge_EmptyMessage,
     responseSerialize: serialize_bridge_GetCpVersionReply,
     responseDeserialize: deserialize_bridge_GetCpVersionReply,
   },
@@ -101,12 +101,23 @@ getCpVersion: {
     path: '/bridge.Bridge/CheckForCpUpdate',
     requestStream: false,
     responseStream: false,
-    requestType: bridge_pb.CheckForCpUpdateRequest,
+    requestType: bridge_pb.EmptyMessage,
     responseType: bridge_pb.CheckForCpUpdateReply,
-    requestSerialize: serialize_bridge_CheckForCpUpdateRequest,
-    requestDeserialize: deserialize_bridge_CheckForCpUpdateRequest,
+    requestSerialize: serialize_bridge_EmptyMessage,
+    requestDeserialize: deserialize_bridge_EmptyMessage,
     responseSerialize: serialize_bridge_CheckForCpUpdateReply,
     responseDeserialize: deserialize_bridge_CheckForCpUpdateReply,
+  },
+  upgradeCp: {
+    path: '/bridge.Bridge/UpgradeCp',
+    requestStream: false,
+    responseStream: false,
+    requestType: bridge_pb.UpgradeCpRequest,
+    responseType: bridge_pb.EmptyMessage,
+    requestSerialize: serialize_bridge_UpgradeCpRequest,
+    requestDeserialize: deserialize_bridge_UpgradeCpRequest,
+    responseSerialize: serialize_bridge_EmptyMessage,
+    responseDeserialize: deserialize_bridge_EmptyMessage,
   },
 };
 

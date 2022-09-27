@@ -16,6 +16,8 @@ import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "bridge";
 
+export interface EmptyMessage {}
+
 /** The request message containing the user's name. */
 export interface HelloRequest {
   name: string;
@@ -26,17 +28,61 @@ export interface HelloReply {
   message: string;
 }
 
-export interface CheckForCpUpdateRequest {}
-
 export interface CheckForCpUpdateReply {
   target: string;
 }
 
-export interface GetCpVersionRequest {}
-
 export interface GetCpVersionReply {
   version: string;
 }
+
+export interface UpgradeCpRequest {
+  version: string;
+}
+
+function createBaseEmptyMessage(): EmptyMessage {
+  return {};
+}
+
+export const EmptyMessage = {
+  encode(
+    _: EmptyMessage,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EmptyMessage {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEmptyMessage();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): EmptyMessage {
+    return {};
+  },
+
+  toJSON(_: EmptyMessage): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EmptyMessage>, I>>(
+    _: I
+  ): EmptyMessage {
+    const message = createBaseEmptyMessage();
+    return message;
+  },
+};
 
 function createBaseHelloRequest(): HelloRequest {
   return { name: "" };
@@ -146,53 +192,6 @@ export const HelloReply = {
   },
 };
 
-function createBaseCheckForCpUpdateRequest(): CheckForCpUpdateRequest {
-  return {};
-}
-
-export const CheckForCpUpdateRequest = {
-  encode(
-    _: CheckForCpUpdateRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): CheckForCpUpdateRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCheckForCpUpdateRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): CheckForCpUpdateRequest {
-    return {};
-  },
-
-  toJSON(_: CheckForCpUpdateRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<CheckForCpUpdateRequest>, I>>(
-    _: I
-  ): CheckForCpUpdateRequest {
-    const message = createBaseCheckForCpUpdateRequest();
-    return message;
-  },
-};
-
 function createBaseCheckForCpUpdateReply(): CheckForCpUpdateReply {
   return { target: "" };
 }
@@ -246,50 +245,6 @@ export const CheckForCpUpdateReply = {
   ): CheckForCpUpdateReply {
     const message = createBaseCheckForCpUpdateReply();
     message.target = object.target ?? "";
-    return message;
-  },
-};
-
-function createBaseGetCpVersionRequest(): GetCpVersionRequest {
-  return {};
-}
-
-export const GetCpVersionRequest = {
-  encode(
-    _: GetCpVersionRequest,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetCpVersionRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetCpVersionRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): GetCpVersionRequest {
-    return {};
-  },
-
-  toJSON(_: GetCpVersionRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<GetCpVersionRequest>, I>>(
-    _: I
-  ): GetCpVersionRequest {
-    const message = createBaseGetCpVersionRequest();
     return message;
   },
 };
@@ -348,6 +303,60 @@ export const GetCpVersionReply = {
   },
 };
 
+function createBaseUpgradeCpRequest(): UpgradeCpRequest {
+  return { version: "" };
+}
+
+export const UpgradeCpRequest = {
+  encode(
+    message: UpgradeCpRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.version !== "") {
+      writer.uint32(10).string(message.version);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpgradeCpRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpgradeCpRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.version = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpgradeCpRequest {
+    return {
+      version: isSet(object.version) ? String(object.version) : "",
+    };
+  },
+
+  toJSON(message: UpgradeCpRequest): unknown {
+    const obj: any = {};
+    message.version !== undefined && (obj.version = message.version);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UpgradeCpRequest>, I>>(
+    object: I
+  ): UpgradeCpRequest {
+    const message = createBaseUpgradeCpRequest();
+    message.version = object.version ?? "";
+    return message;
+  },
+};
+
 /** The greeting service definition. */
 export const BridgeService = {
   /** Sends a greeting */
@@ -367,9 +376,9 @@ export const BridgeService = {
     path: "/bridge.Bridge/GetCpVersion",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: GetCpVersionRequest) =>
-      Buffer.from(GetCpVersionRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => GetCpVersionRequest.decode(value),
+    requestSerialize: (value: EmptyMessage) =>
+      Buffer.from(EmptyMessage.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => EmptyMessage.decode(value),
     responseSerialize: (value: GetCpVersionReply) =>
       Buffer.from(GetCpVersionReply.encode(value).finish()),
     responseDeserialize: (value: Buffer) => GetCpVersionReply.decode(value),
@@ -378,13 +387,23 @@ export const BridgeService = {
     path: "/bridge.Bridge/CheckForCpUpdate",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: CheckForCpUpdateRequest) =>
-      Buffer.from(CheckForCpUpdateRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer) =>
-      CheckForCpUpdateRequest.decode(value),
+    requestSerialize: (value: EmptyMessage) =>
+      Buffer.from(EmptyMessage.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => EmptyMessage.decode(value),
     responseSerialize: (value: CheckForCpUpdateReply) =>
       Buffer.from(CheckForCpUpdateReply.encode(value).finish()),
     responseDeserialize: (value: Buffer) => CheckForCpUpdateReply.decode(value),
+  },
+  upgradeCp: {
+    path: "/bridge.Bridge/UpgradeCp",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: UpgradeCpRequest) =>
+      Buffer.from(UpgradeCpRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => UpgradeCpRequest.decode(value),
+    responseSerialize: (value: EmptyMessage) =>
+      Buffer.from(EmptyMessage.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => EmptyMessage.decode(value),
   },
 } as const;
 
@@ -392,11 +411,9 @@ export interface BridgeServer extends UntypedServiceImplementation {
   /** Sends a greeting */
   sayHello: handleUnaryCall<HelloRequest, HelloReply>;
   /** Get the current version of the control panel */
-  getCpVersion: handleUnaryCall<GetCpVersionRequest, GetCpVersionReply>;
-  checkForCpUpdate: handleUnaryCall<
-    CheckForCpUpdateRequest,
-    CheckForCpUpdateReply
-  >;
+  getCpVersion: handleUnaryCall<EmptyMessage, GetCpVersionReply>;
+  checkForCpUpdate: handleUnaryCall<EmptyMessage, CheckForCpUpdateReply>;
+  upgradeCp: handleUnaryCall<UpgradeCpRequest, EmptyMessage>;
 }
 
 export interface BridgeClient extends Client {
@@ -418,29 +435,29 @@ export interface BridgeClient extends Client {
   ): ClientUnaryCall;
   /** Get the current version of the control panel */
   getCpVersion(
-    request: GetCpVersionRequest,
+    request: EmptyMessage,
     callback: (error: ServiceError | null, response: GetCpVersionReply) => void
   ): ClientUnaryCall;
   getCpVersion(
-    request: GetCpVersionRequest,
+    request: EmptyMessage,
     metadata: Metadata,
     callback: (error: ServiceError | null, response: GetCpVersionReply) => void
   ): ClientUnaryCall;
   getCpVersion(
-    request: GetCpVersionRequest,
+    request: EmptyMessage,
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetCpVersionReply) => void
   ): ClientUnaryCall;
   checkForCpUpdate(
-    request: CheckForCpUpdateRequest,
+    request: EmptyMessage,
     callback: (
       error: ServiceError | null,
       response: CheckForCpUpdateReply
     ) => void
   ): ClientUnaryCall;
   checkForCpUpdate(
-    request: CheckForCpUpdateRequest,
+    request: EmptyMessage,
     metadata: Metadata,
     callback: (
       error: ServiceError | null,
@@ -448,13 +465,28 @@ export interface BridgeClient extends Client {
     ) => void
   ): ClientUnaryCall;
   checkForCpUpdate(
-    request: CheckForCpUpdateRequest,
+    request: EmptyMessage,
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (
       error: ServiceError | null,
       response: CheckForCpUpdateReply
     ) => void
+  ): ClientUnaryCall;
+  upgradeCp(
+    request: UpgradeCpRequest,
+    callback: (error: ServiceError | null, response: EmptyMessage) => void
+  ): ClientUnaryCall;
+  upgradeCp(
+    request: UpgradeCpRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: EmptyMessage) => void
+  ): ClientUnaryCall;
+  upgradeCp(
+    request: UpgradeCpRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: EmptyMessage) => void
   ): ClientUnaryCall;
 }
 
