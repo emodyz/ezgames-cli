@@ -28,7 +28,7 @@
     "figures": "^3.2.0",
     "fs-extra": "^9.1.0",
     "listr2": "^3.4.1",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "moment": "^2.29.1",
     "node-notifier": "^9.0.1",
     "pm2": "^5.1.0",
